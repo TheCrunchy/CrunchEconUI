@@ -12,14 +12,16 @@ namespace CrunchEconUI.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetMeUserAsync()
         {
-        //    if (User.Identity?.IsAuthenticated ?? false)
-        //    {
-           //     return Ok(await usersRepository.GetUserAsync<UserInfo>(int.Parse(User.Identity.Name)));
-         //   }
-       //     else
-         //   {
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                return null;
+                //
+              //  return Ok(await usersRepository.GetUserAsync<UserInfo>(int.Parse(User.Identity.Name)));
+           }
+            else
+            {
                 return StatusCode(StatusCodes.Status401Unauthorized);
-         //   }
+            }
         }
 
         [ResponseCache(NoStore = true, Duration = 0)]
