@@ -1,15 +1,18 @@
 ﻿@inherits LayoutComponentBase
-
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <PageTitle>CrunchEconUI</PageTitle>
-
-<div class="page">
+<CascadingAuthenticationState>
+@*<AuthorizeView>
+    <Authorized>*@
+ <div class="page">
     <div class="sidebar">
         <NavMenu />
+        
     </div>
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+                 <CrunchEconUI.Components.LoginButton></CrunchEconUI.Components.LoginButton>
         </div>
 
         <article class="content px-4">
@@ -17,3 +20,10 @@
         </article>
     </main>
 </div>
+@*    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>*@
+
+</CascadingAuthenticationState>
