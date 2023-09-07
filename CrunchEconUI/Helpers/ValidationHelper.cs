@@ -15,12 +15,6 @@ namespace CrunchEconUI.Helpers
     public class ValidationHelper
     {
         private const int SteamIdStartIndex = 37;
-        private AuthenticatedUserService service { get; set; }
-
-        public ValidationHelper(AuthenticatedUserService service)
-        {
-            this.service = service;
-        }
 
         public static async Task SignIn(CookieSignedInContext context)
         {
@@ -35,6 +29,7 @@ namespace CrunchEconUI.Helpers
             HttpClient httpClient = httpClientFactory.CreateClient();
             httpClient.Timeout = TimeSpan.FromSeconds(3);
             ILogger<ValidationHelper> logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ValidationHelper>>();
+            var auth = context.HttpContext.RequestServices.GetRequiredService<AuthenticatedUserService>();
 
             PlayerSummaryModel playerSummary = null;
             try
@@ -46,8 +41,14 @@ namespace CrunchEconUI.Helpers
             {
                 logger.LogError(e, "An exception occurated when downloading player summaries");
             }
-
-
+            auth.UserInfo = new UserInfo()
+            {
+                SteamId = playerSummary.SteamId.ToString(),
+                Name = playerSummary.Nickname,
+                Role = RoleConstants.DefaultRoleId,
+           
+            };
+            
             return;
         }
 

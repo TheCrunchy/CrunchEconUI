@@ -11,7 +11,7 @@ namespace CrunchEconUI.Services
             this.httpClient = httpClient;
         }
 
-        public UserInfo UserInfo { get; private set; }
+        public UserInfo UserInfo { get; set; }
 
         public async Task InitializeAsync()
         {
