@@ -1,4 +1,5 @@
 using CrunchEconUI.Data;
+using CrunchEconUI.Helpers;
 using CrunchEconUI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -27,8 +28,8 @@ internal class Program
                 options.LogoutPath = "/signout";
                 options.AccessDeniedPath = "/";
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
-                //options.Events.OnSignedIn = ValidationHelper.SignIn;
-                //options.Events.OnValidatePrincipal = ValidationHelper.Validate;
+                options.Events.OnSignedIn = ValidationHelper.SignIn;
+                options.Events.OnValidatePrincipal = ValidationHelper.Validate;
             }).AddSteam();
        
 
