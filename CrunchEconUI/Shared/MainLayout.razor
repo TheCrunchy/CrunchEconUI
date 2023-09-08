@@ -4,39 +4,33 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>CrunchEconUI</PageTitle>
-<CascadingAuthenticationState>
-    <AuthorizeView>
-        <Authorized>
-            <div class="page">
-                <div class="sidebar">
-                    <NavMenu />
-                </div>
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
 
-                <main>
-                    <div class="top-row px-4">
-                        <AvatarComponent User="UserService.UserInfo" Width="40" Height="40" Class="border border-2 m-auto" />
-                    </div>
+    <main>
+        <div class="top-row px-4">
+            @if (UserService.UserInfo != null)
+            {
+                <AvatarComponent User="UserService.UserInfo" Width="40" Height="40" Class="border border-2 m-auto" />
+                <LogoutButton></LogoutButton>
+            }
+        </div>
 
-                    <article class="content px-4">
-                        @Body
-                    </article>
-                </main>
-            </div>
-        </Authorized>
-        <NotAuthorized>
-            <div class="page">
-                <div class="sidebar">
-                    <NavMenu />
-                </div>
+        <article class="content px-4">
 
-                <main>
-                    <article class="content px-4">
-                        <H3>Please sign in to continue</H3>
-                        <CrunchEconUI.Components.LoginButton></CrunchEconUI.Components.LoginButton>
-                    </article>
-                </main>
-            </div>
+            @if (UserService.UserInfo == null)
+            {
+                <H3>You must login to continue</H3>
+                <CrunchEconUI.Components.LoginButton></CrunchEconUI.Components.LoginButton>
+            }
+            else
+            {
+                @Body
+            }
+        </article>
+    </main>
+</div>
 
-        </NotAuthorized>
-    </AuthorizeView>
-</CascadingAuthenticationState>
+

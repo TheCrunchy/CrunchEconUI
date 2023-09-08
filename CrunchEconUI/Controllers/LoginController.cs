@@ -11,13 +11,11 @@ namespace CrunchEconUI.Controllers
     [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
-        private readonly IUserDataService _dataService;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public LoginController(IHttpContextAccessor accessor, IUserDataService service)
+        public LoginController(IHttpContextAccessor accessor)
         {
             this._contextAccessor = accessor;
-            this._dataService = service;
         }
 
         [ResponseCache(NoStore = true, Duration = 0)]
