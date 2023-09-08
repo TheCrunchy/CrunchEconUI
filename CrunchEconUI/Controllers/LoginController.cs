@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using CrunchEconUI.Models;
 using CrunchEconUI.Interfaces;
+using System.Security.Claims;
 
 namespace CrunchEconUI.Controllers
 {
@@ -11,21 +12,12 @@ namespace CrunchEconUI.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IUserDataService _dataService;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        [HttpGet("me")]
-        public async Task<IActionResult> GetMeUserAsync()
+        public LoginController(IHttpContextAccessor accessor, IUserDataService service)
         {
-            Console.WriteLine($"ALAN {User.Identity?.Name}");
-            if (User.Identity?.IsAuthenticated ?? false)
-            {
-                return null;
-
-                // return Ok(_dataService.GetData());
-            }
-            else
-            {
-                return StatusCode(StatusCodes.Status401Unauthorized);
-            }
+            this._contextAccessor = accessor;
+            this._dataService = service;
         }
 
         [ResponseCache(NoStore = true, Duration = 0)]

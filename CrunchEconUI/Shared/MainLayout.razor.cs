@@ -5,12 +5,12 @@ namespace CrunchEconUI.Shared
 {
     public partial class MainLayout
     {
-        [Inject]
+        [Inject] IHttpContextAccessor Accessor { get; set; }
         public AuthenticatedUserService UserService { get; set; }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender = true)
+        protected override async Task OnInitializedAsync()
         {
-            await UserService.InitializeAsync();
+            UserService = Accessor.HttpContext.RequestServices.GetService<AuthenticatedUserService>();
         }
     }
 }
