@@ -46,6 +46,7 @@ namespace CrunchEconUI.Helpers
                 SteamId = playerSummary.SteamId.ToString(),
                 Name = playerSummary.Nickname,
                 Role = RoleConstants.DefaultRoleId,
+                AvatarUrl = playerSummary.AvatarFullUrl,
 
             };
 
@@ -82,7 +83,7 @@ namespace CrunchEconUI.Helpers
                 SteamId = playerSummary.SteamId.ToString(),
                 Name = playerSummary.Nickname,
                 Role = RoleConstants.DefaultRoleId,
-
+                AvatarUrl = playerSummary.AvatarFullUrl,
             };
 
             return;

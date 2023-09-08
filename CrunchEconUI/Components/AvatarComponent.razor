@@ -1,13 +1,19 @@
 ﻿@using CrunchEconUI.Models;﻿
-<p>@User?.SteamId</p>
-@if (GetAvatarImageId().HasValue)
-{
-    <img src="api/images/@GetAvatarImageId()" width="@Width" height="@Height" class="rounded-circle @Class" />
-}
-else
-{
-    <img src="/img/profiles/default_avatar.png" width="@Width" height="@Height" class="rounded-circle @Class" />
-}
+<div Class="rz-p-0 rz-p-md-3">
+
+    <RadzenCard Variant="Variant.Text" Class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+            <RadzenImage Path="@User.AvatarUrl" Style="width: 100px; height: 100px; border-radius: 50%;" />
+            <RadzenStack Gap="0">
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Steam Name</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@User.Name</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Steam Id</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@User.SteamId</b></RadzenText>
+                           <LogoutButton></LogoutButton>
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenCard>
+</div>
 
 @code {
     [Parameter]
@@ -20,6 +26,4 @@ else
     public int? AvatarImageId { get; set; }
     [Parameter]
     public string Class { get; set; }
-
-    public int? GetAvatarImageId() => User == null ? AvatarImageId : User.AvatarImageId;
 }

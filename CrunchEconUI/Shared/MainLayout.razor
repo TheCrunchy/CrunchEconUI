@@ -10,16 +10,17 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
+        <div class="container-fluid">
             @if (UserService.UserInfo != null)
-            {
+            {         <RadzenCard>
                 <AvatarComponent User="UserService.UserInfo" Width="40" Height="40" Class="border border-2 m-auto" />
-                <LogoutButton></LogoutButton>
+    
+                </RadzenCard>
             }
         </div>
 
-        <article class="content px-4">
 
+        <div class ="container-fluid">
             @if (UserService.UserInfo == null)
             {
                 <H3>You must login to continue</H3>
@@ -29,7 +30,7 @@
             {
                 @Body
             }
-        </article>
+        </div>
     </main>
 </div>
 
