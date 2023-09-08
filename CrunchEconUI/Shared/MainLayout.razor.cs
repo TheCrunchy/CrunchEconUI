@@ -7,5 +7,10 @@ namespace CrunchEconUI.Shared
     {
         [Inject]
         public AuthenticatedUserService UserService { get; set; }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender = true)
+        {
+            await UserService.InitializeAsync();
+        }
     }
 }
