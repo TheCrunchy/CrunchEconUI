@@ -1,5 +1,5 @@
-using CrunchEconUI.Data;
 using CrunchEconUI.Helpers;
+using CrunchEconUI.Interfaces;
 using CrunchEconUI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -13,11 +13,11 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddControllers();
         builder.Services.AddServerSideBlazor();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        builder.Services.AddSingleton<IUserDataService, UserDataService>();
         builder.Services.AddTransient(x => new SteamWebInterfaceFactory(builder.Configuration["Authentication:Steam:ClientSecret"]));
         builder.Services.AddScoped<AuthenticationStateProvider, SteamAuthProvider>();
         builder.Services.AddScoped<AuthenticatedUserService>();

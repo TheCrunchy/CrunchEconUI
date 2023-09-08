@@ -13,4 +13,8 @@
     <PackageReference Include="SteamWebAPI2" Version="4.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 </Project>
