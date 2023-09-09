@@ -5,8 +5,8 @@ namespace CrunchEconUI.Services
 {
     public class UserDataService : IUserDataService
     {
-        public Dictionary<ulong, UserInfo> Data = new Dictionary<ulong, UserInfo>();
-        public UserInfo GetData(ulong id)
+        public Dictionary<ulong, UserSession> Data = new Dictionary<ulong, UserSession>();
+        public UserSession GetData(ulong id)
         {
             if (Data.TryGetValue(id, out var package))
             {
@@ -15,15 +15,15 @@ namespace CrunchEconUI.Services
             return null;
         }
 
-        public void StoreData(UserInfo package)
+        public void StoreData(UserSession package)
         {
-            if (!Data.ContainsKey(ulong.Parse(package.SteamId)))
+            if (!Data.ContainsKey(package.SteamId))
             {
-                Data.Add(ulong.Parse(package.SteamId), package);
+                Data.Add(package.SteamId, package);
             }
             else
             {
-                Data[ulong.Parse(package.SteamId)] = package;
+                Data[package.SteamId] = package;
             }
         }
 

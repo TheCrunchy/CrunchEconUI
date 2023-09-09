@@ -4,7 +4,7 @@ namespace CrunchEconUI.Interfaces
 {
     public interface IUserDataService
     {
-        UserInfo GetData(ulong id);
-        void StoreData(UserInfo package);
+        UserSession GetData(ulong id);
+        void StoreData(UserSession package);
     }
 }

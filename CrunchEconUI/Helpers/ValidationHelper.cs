@@ -43,7 +43,7 @@ namespace CrunchEconUI.Helpers
             }
             auth.UserInfo = new UserInfo()
             {
-                SteamId = playerSummary.SteamId.ToString(),
+                SteamId = playerSummary.SteamId,
                 Name = playerSummary.Nickname,
                 Role = RoleConstants.DefaultRoleId,
                 AvatarUrl = playerSummary.AvatarFullUrl,
@@ -80,7 +80,7 @@ namespace CrunchEconUI.Helpers
             }
             auth.UserInfo = new UserInfo()
             {
-                SteamId = playerSummary.SteamId.ToString(),
+                SteamId = playerSummary.SteamId,
                 Name = playerSummary.Nickname,
                 Role = RoleConstants.DefaultRoleId,
                 AvatarUrl = playerSummary.AvatarFullUrl,
