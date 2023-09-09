@@ -1,0 +1,39 @@
+﻿@using CrunchEconUI.Models
+@inject DialogService DialogService
+@using Radzen
+@using Radzen.Blazor
+
+<div>
+    <RadzenCard>
+        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Amount</RadzenText>
+        <NumericPicker @bind-Value="@Amount" Min="0" />
+        <div class="rz-p-12 rz-text-align-center">
+        <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy />
+        
+        <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell />
+        </div>
+    </RadzenCard>
+</div>
+
+@code {
+    public int Amount { get; set; }
+    [Parameter] public ItemListing ListedItem { get; set; }
+
+    public async Task OpenOrder()
+    {
+    }
+
+    public async Task ClickSell(){
+        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> {(Amount * ListedItem.SellPricePerItem):n0}SC", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
+        return;
+    }
+
+    public async Task ClickBuy(){
+        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> {(Amount * ListedItem.BuyPricePerItem):n0}SC", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
+        return;
+    }
+
+    protected override async Task OnInitializedAsync(){
+     //   DialogService.OnClose += CloseConfirm;
+    }
+}

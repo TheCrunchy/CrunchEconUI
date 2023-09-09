@@ -9,6 +9,8 @@ using SteamWebAPI2.Utilities;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using Radzen;
+
 internal class Program
 {
     private static void Main(string[] args)
@@ -34,8 +36,8 @@ internal class Program
                 options.Events.OnSignedIn = ValidationHelper.SignIn;
                 options.Events.OnValidatePrincipal = ValidationHelper.Validate;
             }).AddSteam();
-       
 
+        builder.Services.AddRadzenComponents();
         builder.Services.AddHttpClient();
         builder.Services
           .AddBlazorise(options =>
