@@ -11,5 +11,6 @@
         public bool IsSelling { get; set; }
         public bool IsBuying { get; set; }
         public ulong OwnerId { get; set; }
+        public bool IsAdminListing { get; set; }
     }
 }
