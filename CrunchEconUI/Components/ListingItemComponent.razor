@@ -1,0 +1,29 @@
+﻿@using CrunchEconUI.Models;
+
+<RadzenCard Variant="Variant.Text" Class="rz-my-2 rz-mx-auto">
+    <RadzenStack Orientation="@Radzen.Orientation.Vertical" JustifyContent="@Radzen.JustifyContent.Start" Gap="1rem" Class="rz-p-2">
+        @*  <RadzenImage Path="@User.AvatarUrl" Style="width: 50px; height: 50px; border-radius: 50%;" />*@
+        <RadzenStack Gap="0">
+            <RadzenText TextStyle="TextStyle.Overline">Item Id</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>@ListedItem.ItemId</b></RadzenText>
+            @if (@ListedItem.IsBuying)
+            {
+                <RadzenText TextStyle="TextStyle.Overline"><b>Buy Price</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@ListedItem.BuyPricePerItem</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Overline"><b>Buying up to</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@ListedItem.MaxAmountToBuy</b></RadzenText>
+            }
+            @if (@ListedItem.IsSelling)
+            {
+                <RadzenText TextStyle="TextStyle.Overline"><b>Sell Price</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@ListedItem.SellPricePerItem</b></RadzenText>
+            }
+            <RadzenText TextStyle="TextStyle.Overline"><b>Quantity</b></RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>@ListedItem.Amount</b></RadzenText>
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard>
+
+@code {
+    [Parameter] public ItemListing ListedItem { get; set; }
+}

@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using SteamWebAPI2.Utilities;
-
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 internal class Program
 {
     private static void Main(string[] args)
@@ -20,6 +22,7 @@ internal class Program
         builder.Services.AddSingleton<IUserDataService, UserDataService>();
         builder.Services.AddTransient(x => new SteamWebInterfaceFactory(builder.Configuration["Authentication:Steam:ClientSecret"]));
         builder.Services.AddScoped<AuthenticationStateProvider, SteamAuthProvider>();
+        builder.Services.AddSingleton<IListingsService, JsonListingService>();
         builder.Services.AddScoped<AuthenticatedUserService>();
         builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -34,7 +37,13 @@ internal class Program
        
 
         builder.Services.AddHttpClient();
-  
+        builder.Services
+          .AddBlazorise(options =>
+          {
+              options.Immediate = true;
+          })
+          .AddBootstrapProviders()
+          .AddFontAwesomeIcons();
         var app = builder.Build();
         app.UseAuthentication();
         app.UseAuthorization();

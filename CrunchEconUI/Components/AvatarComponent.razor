@@ -1,8 +1,9 @@
 ﻿@using CrunchEconUI.Models;﻿
+@using Radzen
   <div class="row px-2">
     <div class="col-md-3 col-lg-2 p-2">
     <RadzenCard Variant="Variant.Text" Class="rz-my-2 rz-mx-auto">
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-2">
+        <RadzenStack Orientation="@Radzen.Orientation.Horizontal" JustifyContent="@Radzen.JustifyContent.Start" Gap="1rem" Class="rz-p-2">
             @*  <RadzenImage Path="@User.AvatarUrl" Style="width: 50px; height: 50px; border-radius: 50%;" />*@
             <RadzenStack Gap="0">
                 <RadzenText TextStyle="TextStyle.Overline">Steam Name</RadzenText>
@@ -13,7 +14,7 @@
     </div>
     <div class="col-md-3 col-lg-2 p-2">
     <RadzenCard Variant="Variant.Text" Class="rz-my-2 rz-mx-auto">
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-2">
+            <RadzenStack Orientation="@Radzen.Orientation.Horizontal" JustifyContent="@Radzen.JustifyContent.Start" Gap="1rem" Class="rz-p-2">
             @*  <RadzenImage Path="@User.AvatarUrl" Style="width: 50px; height: 50px; border-radius: 50%;" />*@
             <RadzenStack Gap="0">
                 <RadzenText TextStyle="TextStyle.Overline">Steam Id</RadzenText>

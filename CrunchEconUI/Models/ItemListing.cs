@@ -4,6 +4,7 @@
     {
         public Guid ListingId { get; set; }
         public string ItemId { get; set; }
+        public string ItemIdImage { get; set; }
         public long SellPricePerItem { get; set; }
         public long BuyPricePerItem { get; set; }
         public long Amount { get; set; }
