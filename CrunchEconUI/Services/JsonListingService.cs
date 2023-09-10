@@ -68,6 +68,23 @@ namespace CrunchEconUI.Services
                 OwnerId = 76561198045390854,
                 Suspended = false
             });
+            for (int i = 0; i< 50; i++)
+            {
+                Guid Id = Guid.NewGuid() ;
+                ListedItems.Add(Id, new ItemListing()
+                {
+                    ItemId = "ExampleId3",
+                    BuyPricePerItem = 50,
+                    SellPricePerItem = 75,
+                    ListingId = Id,
+                    IsBuying = false,
+                    IsSelling = true,
+                    Amount = 50,
+                    MaxAmountToBuy = 100,
+                    OwnerId = 76561198045390854,
+                    Suspended = false
+                });
+            }
             return ListedItems.ToList().Select(x => x.Value).ToList();
         }
 

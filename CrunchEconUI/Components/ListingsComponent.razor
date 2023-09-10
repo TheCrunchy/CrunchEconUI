@@ -15,7 +15,7 @@
               Responsive="true"
               Sortable="true"
               Striped="true"
-              PageSize="50"
+              PageSize="25"
               CommandMode="DataGridCommandMode.Commands"
               SubmitFormOnEnter="false"
               Filterable="true" PopupSize="Blazorise.ModalSize.ExtraLarge">
@@ -42,7 +42,7 @@
                 <NewCommandTemplate>
                 </NewCommandTemplate>
                 <EditCommandTemplate>
-                    <BuyAndSellComponent ListedItem="@context.Item"></BuyAndSellComponent>
+                    <BuyAndSellComponent ListedItem="@context.Item" User="User"></BuyAndSellComponent>
                 </EditCommandTemplate>
             </DataGridCommandColumn>
         </ChildContent>
@@ -54,7 +54,8 @@
     [Inject] IListingsService listingService { get; set; }
     List<ItemListing> Items = new ();
     public DataGrid<ItemListing> GridRef { get; set; }
-
+        [Parameter]
+    public UserInfo? User { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Items = await listingService.GetListings();

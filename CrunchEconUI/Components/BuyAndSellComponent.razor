@@ -9,7 +9,7 @@
     <RadzenCard>
         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Amount</RadzenText>
         <NumericPicker @bind-Value="@Amount" Min="0"> </NumericPicker>
-        <div class="rz-p-12 rz-text-align-center">
+        <div class="rz-p-6 rz-text-align-center">
             @if (ListedItem.IsSelling)
             {
                 <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy />
@@ -24,11 +24,17 @@
 </div>
 
 @code {
+    [Parameter]
+    public UserInfo? User { get; set; }
     public long Amount { get; set; }
     [Parameter]
     public ItemListing ListedItem { get; set; }
     [Inject]
     IListingsService listingService { get; set; }
+
+    [Inject]
+    public PlayerBalanceService BalanceService { get; set; }
+
     public async Task OpenOrder()
     {
     }
@@ -47,12 +53,14 @@
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
         }
+
         var buyableAmount = ListedItem.MaxAmountToBuy - ListedItem.Amount;
         if (buyableAmount < Amount)
         {
             Amount = buyableAmount;
         }
-        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
+     
+        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
         return;
     }
 
@@ -68,6 +76,12 @@
         if (Amount > ListedItem.Amount)
         {
             Amount = ListedItem.Amount;
+        }
+        var balance = BalanceService.GetBalance(User.SteamId);
+        if (balance < Amount * ListedItem.BuyPricePerItem)
+        {
+            await DialogService.Alert($"You cannot afford this! Last known balance is <p class=\"PriceRed\">{balance} SC</p>", "Error");
+            return;
         }
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
         return;

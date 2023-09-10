@@ -1,16 +1,28 @@
 ﻿@using CrunchEconUI.Models;﻿
+@using CrunchEconUI.Services
 @using Radzen
   <div class="row px-2">
     <div class="col-md-3 col-lg-2 p-2">
     <RadzenCard Variant="Variant.Text" Class="rz-my-2 rz-mx-auto">
         <RadzenStack Orientation="@Radzen.Orientation.Horizontal" JustifyContent="@Radzen.JustifyContent.Start" Gap="1rem" Class="rz-p-2">
-            @*  <RadzenImage Path="@User.AvatarUrl" Style="width: 50px; height: 50px; border-radius: 50%;" />*@
+              <RadzenImage Path="@User.AvatarUrl" Style="width: 100px; height: 100px; border-radius: 50%;" />
             <RadzenStack Gap="0">
                 <RadzenText TextStyle="TextStyle.Overline">Steam Name</RadzenText>
                 <RadzenText TextStyle="TextStyle.Body1"><b>@User.Name</b></RadzenText>
             </RadzenStack>
         </RadzenStack>
     </RadzenCard>
+    </div>
+    <div class="col-md-3 col-lg-2 p-2">
+        <RadzenCard Variant="Variant.Text" Class="rz-my-2 rz-mx-auto">
+            <RadzenStack Orientation="@Radzen.Orientation.Horizontal" JustifyContent="@Radzen.JustifyContent.Start" Gap="1rem" Class="rz-p-2">
+                @*  <RadzenImage Path="@User.AvatarUrl" Style="width: 50px; height: 50px; border-radius: 50%;" />*@
+                <RadzenStack Gap="0">
+                    <RadzenText TextStyle="TextStyle.Overline">Last Known Balance</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1"><b>@BalanceService.GetBalance(User.SteamId) SC</b></RadzenText>
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenCard>
     </div>
     <div class="col-md-3 col-lg-2 p-2">
     <RadzenCard Variant="Variant.Text" Class="rz-my-2 rz-mx-auto">
@@ -24,8 +36,11 @@
         </RadzenStack>
     </RadzenCard>
     </div>
+
     </div>
 @code {
     [Parameter]
     public UserInfo? User { get; set; }
+    [Inject]
+    public PlayerBalanceService BalanceService { get; set; }
 }

@@ -25,6 +25,7 @@ internal class Program
         builder.Services.AddTransient(x => new SteamWebInterfaceFactory(builder.Configuration["Authentication:Steam:ClientSecret"]));
         builder.Services.AddScoped<AuthenticationStateProvider, SteamAuthProvider>();
         builder.Services.AddSingleton<IListingsService, JsonListingService>();
+        builder.Services.AddSingleton<PlayerBalanceService>();
         builder.Services.AddScoped<AuthenticatedUserService>();
         builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
