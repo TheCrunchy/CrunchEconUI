@@ -52,7 +52,7 @@ namespace CrunchEconUI.Services
             {
                 ItemId = "ExampleId",
                 BuyPricePerItem = 50,
-                SellPricePerItem = 75,
+                SellPricePerItem = 5,
                 ListingId = Id1,
                 IsBuying = true,
                 IsSelling = true,
@@ -64,8 +64,8 @@ namespace CrunchEconUI.Services
             ListedItems.Add(Id2, new ItemListing()
             {
                 ItemId = "ExampleId2",
-                BuyPricePerItem = 50,
-                SellPricePerItem = 75,
+                BuyPricePerItem = 55,
+                SellPricePerItem = 7,
                 ListingId = Id2,
                 IsBuying = true,
                 IsSelling = true,
@@ -77,8 +77,8 @@ namespace CrunchEconUI.Services
             ListedItems.Add(Id3, new ItemListing()
             {
                 ItemId = "ExampleId3",
-                BuyPricePerItem = 50,
-                SellPricePerItem = 75,
+                BuyPricePerItem = 500,
+                SellPricePerItem = 3,
                 ListingId = Id3,
                 IsBuying = false,
                 IsSelling = true,

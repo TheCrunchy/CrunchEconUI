@@ -2,7 +2,10 @@
 @using CrunchEconUI.Models
 @using CrunchEconUI.Services
 @using Blazorise
+@using Radzen
+
 @inject IJSRuntime JsRuntime
+
 
 <div class="container-fluid">
     <DataGrid TItem="ItemListing"
@@ -27,11 +30,11 @@
                 </DisplayTemplate>
             </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="ItemId" Caption="Item" Editable="false">   </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Price to Buy" Editable="false" Sortable="true">   </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Price to Buy" Filterable="false"  Editable="false">   </DataGridColumn>
    
-            <DataGridColumn TItem="ItemListing" Field="SellPricePerItem" Caption="Price to Sell" Editable="false" Sortable="true">    </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="Amount" Caption="Amount" Editable="false" Sortable="true">   </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="MaxAmountToBuy" Caption="Maximum Stock to buy" Editable="false">   </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="SellPricePerItem" Caption="Price to Sell" Filterable="false" Editable="false">    </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="Amount" Caption="Amount" Editable="false" Filterable="false" Sortable="true">   </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="MaxAmountToBuy" Caption="Maximum Stock to buy" Filterable="false" Editable="false">   </DataGridColumn>
      @*       <DataGridColumn TItem="ItemListing" Field="OwnerId" Caption="Owner" Editable="false">   </DataGridColumn>*@
             <DataGridCommandColumn TItem="ItemListing" DeleteCommandAllowed="false">
                 <CancelCommandTemplate>
@@ -39,8 +42,11 @@
                 </CancelCommandTemplate>
                 <SaveCommandTemplate>
                 </SaveCommandTemplate>
-                <NewCommandTemplate>
-                </NewCommandTemplate>
+                <ClearFilterCommandTemplate>
+           
+                        <RadzenDropDown TValue="string" @bind-Value=@Bound Data=@Sorting Change="@Changed" Style="width: 100%; max-width: 400px;" />
+         
+                </ClearFilterCommandTemplate>
                 <EditCommandTemplate>
                     <BuyAndSellComponent ListedItem="@context.Item" User="User"></BuyAndSellComponent>
                 </EditCommandTemplate>
