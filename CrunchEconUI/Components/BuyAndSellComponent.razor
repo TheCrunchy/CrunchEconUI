@@ -59,8 +59,12 @@
         {
             Amount = buyableAmount;
         }
-     
+
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
+        if (confirmed != null && confirmed.Value)
+        {
+            listingService.SuspendListing(ListedItem);
+        }
         return;
     }
 
@@ -84,6 +88,10 @@
             return;
         }
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
+        if (confirmed != null && confirmed.Value)
+        {
+            listingService.SuspendListing(ListedItem);
+        }
         return;
     }
 

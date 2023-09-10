@@ -10,7 +10,7 @@
             {
                 return PlayerBalances[steamid];
             }
-            return 0;  
+            return 88888888;  
         }
 
         public void SetBalance(ulong steamid, long balance)

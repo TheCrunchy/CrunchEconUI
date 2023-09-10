@@ -18,7 +18,7 @@
               PageSize="25"
               CommandMode="DataGridCommandMode.Commands"
               SubmitFormOnEnter="false"
-              Filterable="true" PopupSize="Blazorise.ModalSize.ExtraLarge">
+              Filterable="true" PopupSize="Blazorise.ModalSize.ExtraLarge" @ref=@GridRef>
         <ChildContent>
 
             <DataGridColumn TItem="ItemListing" Field="ItemIdImage" Caption="" Filterable="false" Editable="false">
@@ -27,10 +27,10 @@
                 </DisplayTemplate>
             </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="ItemId" Caption="Item" Editable="false">   </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Buy Price Per Item" Editable="false">   </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Price to Buy" Editable="false" Sortable="true">   </DataGridColumn>
    
-            <DataGridColumn TItem="ItemListing" Field="SellPricePerItem" Caption="Sell Price Per Item" Editable="false">   </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="Amount" Caption="Amount" Editable="false">   </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="SellPricePerItem" Caption="Price to Sell" Editable="false" Sortable="true">    </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="Amount" Caption="Amount" Editable="false" Sortable="true">   </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="MaxAmountToBuy" Caption="Maximum Stock to buy" Editable="false">   </DataGridColumn>
      @*       <DataGridColumn TItem="ItemListing" Field="OwnerId" Caption="Owner" Editable="false">   </DataGridColumn>*@
             <DataGridCommandColumn TItem="ItemListing" DeleteCommandAllowed="false">
@@ -51,13 +51,5 @@
 </div>
 
 @code {
-    [Inject] IListingsService listingService { get; set; }
-    List<ItemListing> Items = new ();
-    public DataGrid<ItemListing> GridRef { get; set; }
-        [Parameter]
-    public UserInfo? User { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-        Items = await listingService.GetListings();
-    }
+
 }

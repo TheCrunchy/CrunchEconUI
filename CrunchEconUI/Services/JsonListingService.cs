@@ -6,10 +6,25 @@ namespace CrunchEconUI.Services
     public class JsonListingService : IListingsService
     {
         private Dictionary<Guid, ItemListing> ListedItems = new Dictionary<Guid, ItemListing>();
+
+        public Action<ItemListing>? RefreshListings { get; set; }
+
         public Task ConfirmListingRequest(ulong steamId, ItemListing listing)
         {
             throw new NotImplementedException();
         }
+
+        public async Task SuspendListing(ItemListing item)
+        {
+            if (ListedItems.TryGetValue(item.ListingId, out var listed))
+            {
+                listed.Suspended = true;
+                ListedItems[item.ListingId] = listed;
+          
+                RefreshListings?.Invoke(listed);
+            }
+        }
+
         public async Task<bool> IsSuspended(Guid itemId)
         {
             if (ListedItems.ContainsKey(itemId))
@@ -25,6 +40,10 @@ namespace CrunchEconUI.Services
 
         public async Task<List<ItemListing>> GetListings()
         {
+            if (ListedItems.Any())
+            {
+                return ListedItems.ToList().Select(x => x.Value).ToList();
+            }
             ListedItems.Clear();
             var Id1 = Guid.NewGuid();
             var Id2 = Guid.NewGuid();
@@ -40,7 +59,7 @@ namespace CrunchEconUI.Services
                 Amount = 50,
                 MaxAmountToBuy = 100,
                 OwnerId = 76561198045390854,
-                Suspended = true,
+                Suspended = false,
             });
             ListedItems.Add(Id2, new ItemListing()
             {
@@ -68,9 +87,9 @@ namespace CrunchEconUI.Services
                 OwnerId = 76561198045390854,
                 Suspended = false
             });
-            for (int i = 0; i< 50; i++)
+            for (int i = 0; i < 50; i++)
             {
-                Guid Id = Guid.NewGuid() ;
+                Guid Id = Guid.NewGuid();
                 ListedItems.Add(Id, new ItemListing()
                 {
                     ItemId = "ExampleId3",
