@@ -21,7 +21,7 @@ internal class Program
         builder.Services.AddControllers();
         builder.Services.AddServerSideBlazor();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        builder.Services.AddSingleton<IUserDataService, UserDataService>();
+       // builder.Services.AddSingleton<IUserDataService, UserDataService>();
         builder.Services.AddTransient(x => new SteamWebInterfaceFactory(builder.Configuration["Authentication:Steam:ClientSecret"]));
         builder.Services.AddScoped<AuthenticationStateProvider, SteamAuthProvider>();
         builder.Services.AddSingleton<IListingsService, JsonListingService>();

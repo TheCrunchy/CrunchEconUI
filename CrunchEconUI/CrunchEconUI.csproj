@@ -22,4 +22,8 @@
     <Folder Include="Data\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CrunchEconModels\CrunchEconModels.csproj" />
+  </ItemGroup>
+
 </Project>

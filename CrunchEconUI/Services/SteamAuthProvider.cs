@@ -1,4 +1,5 @@
-﻿using CrunchEconUI.Models;
+﻿using CrunchEconModels.Models;
+using CrunchEconUI.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 

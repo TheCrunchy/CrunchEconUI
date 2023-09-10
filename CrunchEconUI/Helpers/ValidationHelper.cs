@@ -9,6 +9,7 @@ using CrunchEconUI.Services;
 using System.Runtime.CompilerServices;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
+using CrunchEconModels.Models;
 
 namespace CrunchEconUI.Helpers
 {

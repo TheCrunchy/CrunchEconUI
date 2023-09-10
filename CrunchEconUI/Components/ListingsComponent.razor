@@ -1,11 +1,12 @@
-﻿@using CrunchEconUI.Models
+﻿@using CrunchEconModels.Models
+@using CrunchEconUI.Models
 @using CrunchEconUI.Services
 @using Blazorise
 @inject IJSRuntime JsRuntime
 
 <div class="container-fluid">
     <DataGrid TItem="ItemListing"
-              Data="@Items"
+              Data="@Items.Where(x => !x.Suspended)"
               EditMode="Blazorise.DataGrid.DataGridEditMode.Popup"
               SelectionMode="Blazorise.DataGrid.DataGridSelectionMode.Single"
               ShowPager="true"

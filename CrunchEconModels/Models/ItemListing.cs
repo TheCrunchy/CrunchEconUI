@@ -1,4 +1,4 @@
-﻿namespace CrunchEconUI.Models
+﻿namespace CrunchEconModels.Models
 {
     public class ItemListing
     {

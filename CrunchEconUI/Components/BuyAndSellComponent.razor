@@ -1,39 +1,80 @@
-﻿@using CrunchEconUI.Models
+﻿@using CrunchEconModels.Models
+@using CrunchEconUI.Models
 @inject DialogService DialogService
+@using CrunchEconUI.Services
 @using Radzen
 @using Radzen.Blazor
 
 <div>
     <RadzenCard>
         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Amount</RadzenText>
-        <NumericPicker @bind-Value="@Amount" Min="0" />
+        <NumericPicker @bind-Value="@Amount" Min="0"> </NumericPicker>
         <div class="rz-p-12 rz-text-align-center">
-        <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy />
-        
-        <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell />
+            @if (ListedItem.IsSelling)
+            {
+                <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy />
+            }
+            @if (ListedItem.IsBuying && ListedItem.Amount < ListedItem.MaxAmountToBuy)
+            {
+                <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell />
+            }
+
         </div>
     </RadzenCard>
 </div>
 
 @code {
-    public int Amount { get; set; }
-    [Parameter] public ItemListing ListedItem { get; set; }
-
+    public long Amount { get; set; }
+    [Parameter]
+    public ItemListing ListedItem { get; set; }
+    [Inject]
+    IListingsService listingService { get; set; }
     public async Task OpenOrder()
     {
     }
 
-    public async Task ClickSell(){
+    public async Task<bool> IsSuspended()
+    {
+        return await listingService.IsSuspended(ListedItem.ListingId);
+    }
+
+    public async Task ClickSell()
+    {
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
+        var susp = await IsSuspended();
+        if (susp)
+        {
+            await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
+            return;
+        }
+        var buyableAmount = ListedItem.MaxAmountToBuy - ListedItem.Amount;
+        if (buyableAmount < Amount)
+        {
+            Amount = buyableAmount;
+        }
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
         return;
     }
 
-    public async Task ClickBuy(){
+    public async Task ClickBuy()
+    {
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
+        var susp = await IsSuspended();
+        if (susp)
+        {
+            await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
+            return;
+        }
+        if (Amount > ListedItem.Amount)
+        {
+            Amount = ListedItem.Amount;
+        }
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
         return;
     }
 
-    protected override async Task OnInitializedAsync(){
-     //   DialogService.OnClose += CloseConfirm;
+    protected override async Task OnInitializedAsync()
+    {
+
     }
 }
