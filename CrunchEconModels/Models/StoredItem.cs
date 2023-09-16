@@ -1,4 +1,5 @@
-﻿namespace CrunchEconModels.Models
+﻿using System;
+namespace CrunchEconModels.Models
 {
     public class StoredItem
     {

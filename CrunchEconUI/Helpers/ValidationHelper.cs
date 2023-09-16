@@ -31,6 +31,7 @@ namespace CrunchEconUI.Helpers
             httpClient.Timeout = TimeSpan.FromSeconds(3);
             ILogger<ValidationHelper> logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ValidationHelper>>();
             var auth = context.HttpContext.RequestServices.GetRequiredService<AuthenticatedUserService>();
+            var validated = context.HttpContext.RequestServices.GetRequiredService<ValidatedUserService>();
 
             PlayerSummaryModel playerSummary = null;
             try
@@ -50,7 +51,7 @@ namespace CrunchEconUI.Helpers
                 AvatarUrl = playerSummary.AvatarFullUrl,
 
             };
-
+            validated.StoreData(auth.UserInfo);
             return;
         }
 
@@ -62,12 +63,21 @@ namespace CrunchEconUI.Helpers
             }
 
             string steamId = context.Principal.FindFirst(ClaimTypes.NameIdentifier).Value[SteamIdStartIndex..];
+            var validated = context.HttpContext.RequestServices.GetRequiredService<ValidatedUserService>();
+            var auth = context.HttpContext.RequestServices.GetRequiredService<AuthenticatedUserService>();
+            if (validated.GetData(ulong.Parse(steamId)) != null)
+            {
+                var data = validated.GetData(ulong.Parse(steamId));
+                auth.UserInfo = data;
+                return;
+            }
+       
             IHttpClientFactory httpClientFactory = context.HttpContext.RequestServices.GetRequiredService<IHttpClientFactory>();
             SteamWebInterfaceFactory steamFactory = context.HttpContext.RequestServices.GetRequiredService<SteamWebInterfaceFactory>();
             HttpClient httpClient = httpClientFactory.CreateClient();
             httpClient.Timeout = TimeSpan.FromSeconds(3);
             ILogger<ValidationHelper> logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ValidationHelper>>();
-            var auth = context.HttpContext.RequestServices.GetRequiredService<AuthenticatedUserService>();
+    
 
             PlayerSummaryModel playerSummary = null;
             try
@@ -86,7 +96,7 @@ namespace CrunchEconUI.Helpers
                 Role = RoleConstants.DefaultRoleId,
                 AvatarUrl = playerSummary.AvatarFullUrl,
             };
-
+            validated.StoreData(auth.UserInfo);
             return;
         }
     }

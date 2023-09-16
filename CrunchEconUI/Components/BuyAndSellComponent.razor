@@ -1,14 +1,16 @@
 ﻿@using CrunchEconModels.Models
+@using CrunchEconModels.Models.Events;
 @using CrunchEconUI.Models
 @inject DialogService DialogService
 @using CrunchEconUI.Services
+@using Newtonsoft.Json;
 @using Radzen
 @using Radzen.Blazor
 
 <div>
     <RadzenCard>
         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Amount</RadzenText>
-        <NumericPicker @bind-Value="@Amount" Min="0"> </NumericPicker>
+        <NumericPicker @bind-Value="@Amount" Min="0" Max=@Int32.MaxValue> </NumericPicker>
         <div class="rz-p-6 rz-text-align-center">
             @if (ListedItem.IsSelling)
             {
@@ -26,7 +28,7 @@
 @code {
     [Parameter]
     public UserInfo? User { get; set; }
-    public long Amount { get; set; }
+    public int Amount { get; set; }
     [Parameter]
     public ItemListing ListedItem { get; set; }
     [Inject]
@@ -34,6 +36,8 @@
 
     [Inject]
     public PlayerBalanceService BalanceService { get; set; }
+    [Inject]
+    public EventService eventService { get; set; }
 
     public async Task OpenOrder()
     {
@@ -63,7 +67,8 @@
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
-            listingService.SuspendListing(ListedItem);
+            listingService.ModifySuspended(ListedItem);
+
         }
         return;
     }
@@ -90,8 +95,27 @@
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
-            listingService.SuspendListing(ListedItem);
+            listingService.ModifySuspended(ListedItem);
+            var buy = new BuyItemEvent();
+            buy.ListedItemId = ListedItem.ListingId;
+            buy.SellerSteamId = ListedItem.OwnerId;
+            buy.Price = Amount * ListedItem.BuyPricePerItem;
+            buy.Amount = Amount;
+            buy.BuyerSteamId = User.SteamId;
+            buy.DefinitionIdString = $"{ListedItem.ItemId}";
+            buy.OriginatingPlayerSteamId = User.SteamId;
+            buy.RaisedAt = DateTime.Now;
+            buy.IsAdminSale = true;
+
+            var final = new Event();
+            
+            final.EventType = EventType.BuyItem;
+            final.JsonEvent = JsonConvert.SerializeObject(buy);
+
+            eventService.AddEvent(User.SteamId, final);
         }
+
+        
         return;
     }
 

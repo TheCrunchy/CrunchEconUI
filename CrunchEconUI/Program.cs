@@ -13,6 +13,7 @@ using Radzen;
 
 internal class Program
 {
+    public static string APIKEY = "";
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -21,11 +22,14 @@ internal class Program
         builder.Services.AddControllers();
         builder.Services.AddServerSideBlazor();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-       // builder.Services.AddSingleton<IUserDataService, UserDataService>();
+        // builder.Services.AddSingleton<IUserDataService, UserDataService>();
+        APIKEY = builder.Configuration["ApiKey"];
         builder.Services.AddTransient(x => new SteamWebInterfaceFactory(builder.Configuration["Authentication:Steam:ClientSecret"]));
         builder.Services.AddScoped<AuthenticationStateProvider, SteamAuthProvider>();
-        builder.Services.AddSingleton<IListingsService, JsonListingService>();
+        builder.Services.AddSingleton<IListingsService, IListingService>();
         builder.Services.AddSingleton<PlayerBalanceService>();
+        builder.Services.AddSingleton<ValidatedUserService>();
+        builder.Services.AddSingleton<EventService>();
         builder.Services.AddScoped<AuthenticatedUserService>();
         builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>

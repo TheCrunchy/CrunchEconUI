@@ -1,4 +1,5 @@
-﻿namespace CrunchEconModels.Models
+﻿using System;
+namespace CrunchEconModels.Models
 {
     public class ItemListing
     {
@@ -7,8 +8,8 @@
         public string ItemIdImage { get; set; }
         public long SellPricePerItem { get; set; }
         public long BuyPricePerItem { get; set; }
-        public long Amount { get; set; }
-        public long MaxAmountToBuy { get; set; }
+        public int Amount { get; set; }
+        public int MaxAmountToBuy { get; set; }
         public bool IsSelling { get; set; }
         public bool IsBuying { get; set; }
         public ulong OwnerId { get; set; }

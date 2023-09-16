@@ -15,5 +15,6 @@ namespace CrunchEconModels.Models
         NotEnoughItems,
         BuyerCannotAfford,
         ItemIdDoesntExist,
+        NotOnline,
     }
 }

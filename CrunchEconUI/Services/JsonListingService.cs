@@ -3,7 +3,7 @@ using CrunchEconUI.Models;
 
 namespace CrunchEconUI.Services
 {
-    public class JsonListingService : IListingsService
+    public class IListingService : IListingsService
     {
         private Dictionary<Guid, ItemListing> ListedItems = new Dictionary<Guid, ItemListing>();
 
@@ -14,11 +14,11 @@ namespace CrunchEconUI.Services
             throw new NotImplementedException();
         }
 
-        public async Task SuspendListing(ItemListing item)
+        public async Task ModifySuspended(ItemListing item, bool suspended = true)
         {
             if (ListedItems.TryGetValue(item.ListingId, out var listed))
             {
-                listed.Suspended = true;
+                listed.Suspended = suspended;
                 ListedItems[item.ListingId] = listed;
           
                 RefreshListings?.Invoke(listed);
@@ -50,7 +50,7 @@ namespace CrunchEconUI.Services
             var Id3 = Guid.NewGuid();
             ListedItems.Add(Id1, new ItemListing()
             {
-                ItemId = "ExampleId",
+                ItemId = "MyObjectBuilder_Ingot/Iron",
                 BuyPricePerItem = 50,
                 SellPricePerItem = 5,
                 ListingId = Id1,
@@ -125,5 +125,7 @@ namespace CrunchEconUI.Services
             }
             return new ItemListing() { Suspended = true };
         }
+
+ 
     }
 }

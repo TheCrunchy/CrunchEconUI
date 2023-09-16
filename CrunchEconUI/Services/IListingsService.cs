@@ -13,7 +13,7 @@ namespace CrunchEconUI.Services
         Task CreateListingRequest(ulong steamId, ItemListing listing);
         Task ConfirmListingRequest(ulong steamId, ItemListing listing);
         Task RemoveListingRequest(ulong steamId, ItemListing listing);
-        Task SuspendListing(ItemListing item);
+        Task ModifySuspended(ItemListing item, bool suspended = false);
         Action<ItemListing>? RefreshListings { get; set; }
     }
 }
