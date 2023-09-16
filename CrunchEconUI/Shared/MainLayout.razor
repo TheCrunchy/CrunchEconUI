@@ -6,23 +6,42 @@
 <RadzenNotification />
 <PageTitle>CrunchEconUI</PageTitle>
 <div class="page">
-    <div class="sidebar">
+@*     <div class="sidebar">
         <NavMenu />
-    </div>
+    </div> *@
 
     <main>
-            @if (UserService.UserInfo != null)
-            {
-               <div class="container-fluid">
-                    <RadzenCard>
-                        <AvatarComponent User="UserService.UserInfo"/>
+        @if (UserService.UserInfo != null)
+        {
+            <div class="container-fluid">
+                <RadzenCard>
+                    <AvatarComponent User="UserService.UserInfo" />
 
-                    </RadzenCard>
-                    <ListingsComponent User="UserService.UserInfo"></ListingsComponent>
-                    </div>
-           
-            }
-    
+                </RadzenCard>
+
+
+                <RadzenTabs RenderMode="TabRenderMode.Client">
+                    <Tabs>
+                        <RadzenTabsItem Text="Player Listings">
+                            <PlayerListingsComponent User="UserService.UserInfo"></PlayerListingsComponent>
+                        </RadzenTabsItem>
+                        <RadzenTabsItem Text="NPC Listings">
+                            <PlayerListingsComponent User="UserService.UserInfo"></PlayerListingsComponent>
+                        </RadzenTabsItem>
+                        <RadzenTabsItem Text="Contracts">
+                            <PlayerListingsComponent User="UserService.UserInfo"></PlayerListingsComponent>
+                        </RadzenTabsItem>
+                        <RadzenTabsItem Text="Ships">
+                            <PlayerListingsComponent User="UserService.UserInfo"></PlayerListingsComponent>
+                        </RadzenTabsItem>
+                    </Tabs>
+                </RadzenTabs>
+
+
+            </div>
+
+        }
+
 
         @if (UserService.UserInfo == null)
         {

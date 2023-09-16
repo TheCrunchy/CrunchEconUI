@@ -2,10 +2,11 @@
 
 namespace CrunchEconUI.Services
 {
-    public class PlayerBalanceService
+    public class PlayerBalanceAndNotifyService
     {
         private Dictionary<ulong, long> PlayerBalances = new Dictionary<ulong, long>();
         public Action<ulong>? RefreshListings { get; set; }
+        public Action<ulong, string>? SendNotification { get; set; }
         public long GetBalance(ulong steamid)
         {
             if (PlayerBalances.ContainsKey(steamid))
@@ -18,6 +19,7 @@ namespace CrunchEconUI.Services
 
         public void SetBalance(ulong steamid, long balance)
         {
+            return;
             if (PlayerBalances.ContainsKey(steamid))
             {
                 PlayerBalances[steamid] = balance;
@@ -28,6 +30,11 @@ namespace CrunchEconUI.Services
                 PlayerBalances.Add(steamid, balance);
                 RefreshListings?.Invoke(steamid);
             }
+        }
+
+        public void SendPlayerNotification(ulong steamId, string Notification)
+        {
+            SendNotification?.Invoke(steamId, Notification);
         }
     }
 }

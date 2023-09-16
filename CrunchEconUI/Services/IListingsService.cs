@@ -8,6 +8,7 @@ namespace CrunchEconUI.Services
        Task<List<ItemListing>> GetListings();
        Task<bool> IsSuspended(Guid itemId);
        Task<ItemListing> GetUpdatedItem(Guid itemId);
+       Task StoreItem(ItemListing listing);
        Task<List<ItemListing>> GetUsersOwnListings(ulong steamId);
 
         Task CreateListingRequest(ulong steamId, ItemListing listing);

@@ -1,5 +1,7 @@
 ﻿using CrunchEconModels.Models;
 using CrunchEconUI.Models;
+using SteamWebAPI2.Models;
+using System.Collections.Generic;
 
 namespace CrunchEconUI.Services
 {
@@ -20,7 +22,7 @@ namespace CrunchEconUI.Services
             {
                 listed.Suspended = suspended;
                 ListedItems[item.ListingId] = listed;
-          
+
                 RefreshListings?.Invoke(listed);
             }
         }
@@ -126,6 +128,16 @@ namespace CrunchEconUI.Services
             return new ItemListing() { Suspended = true };
         }
 
- 
+        public async Task StoreItem(ItemListing listing)
+        {
+            if (ListedItems.ContainsKey(listing.ListingId))
+            {
+                ListedItems[listing.ListingId] = listing;
+                return;
+            }
+            ListedItems.Add(listing.ListingId, listing);
+
+            RefreshListings?.Invoke(listing);
+        }
     }
 }

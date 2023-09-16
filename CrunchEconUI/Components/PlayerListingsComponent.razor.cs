@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace CrunchEconUI.Components
 {
-    public partial class ListingsComponent : IAsyncDisposable
+    public partial class PlayerListingsComponent : IAsyncDisposable
     {
         [Inject] IListingsService listingService { get; set; }
         List<ItemListing> Items = new();

@@ -20,8 +20,8 @@ namespace CrunchEconUI.Controllers
     {
         private EventService eventService { get; set; }
         private IListingsService listingService { get; set; }
-        private PlayerBalanceService balanceService { get; set; }
-        public EventController(EventService events, PlayerBalanceService balances, IListingsService listservice)
+        private PlayerBalanceAndNotifyService balanceService { get; set; }
+        public EventController(EventService events, PlayerBalanceAndNotifyService balances, IListingsService listservice)
         {
             this.eventService = events;
             this.balanceService = balances;
@@ -70,10 +70,11 @@ namespace CrunchEconUI.Controllers
             {
                 await ProcessEvent(eventMessage);
             }
-           
+
             return Ok();
         }
-        public async Task ProcessEvent(Event eventMessage){
+        public async Task ProcessEvent(Event eventMessage)
+        {
             switch (eventMessage.EventType)
             {
                 case EventType.BalanceUpdate:
@@ -84,20 +85,67 @@ namespace CrunchEconUI.Controllers
                     }
                     break;
                 case EventType.BuyItemResult:
-                    var result = JsonConvert.DeserializeObject<BuyItemEvent>(eventMessage.JsonEvent);
-                    if (result.Result == EventResult.Success)
                     {
-                        eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                        var result = JsonConvert.DeserializeObject<BuyItemEvent>(eventMessage.JsonEvent);
+                        if (result.Result == EventResult.Success)
+                        {
+                            var item = await listingService.GetUpdatedItem(result.ListedItemId);
+                            item.Amount -= result.Amount;
+                            item.Suspended = false;
+                            if (item.Amount > 0)
+                            {
+                                await listingService.StoreItem(item);
+                            }
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully bought {result.Amount} of {result.DefinitionIdString}");
+                        }
+                        else
+                        {
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to buy {result.Amount} of {result.DefinitionIdString}, reason <p class=\"PriceRed\">{result.Result}<p>");
+                            var item = await listingService.GetUpdatedItem(result.ListedItemId);
+                            await listingService.ModifySuspended(item, false);
+                        }
+                        break;
                     }
-                    else
-                    {
-                        var item = await listingService.GetUpdatedItem(result.ListedItemId);
-                        await listingService.ModifySuspended(item, false);
-                    }
-                    break;
+
                 case EventType.SellItemResult:
-                    break;
+                    {
+                        var result = JsonConvert.DeserializeObject<BuyItemEvent>(eventMessage.JsonEvent);
+                        if (result.Result == EventResult.Success)
+                        {
+                            var item = await listingService.GetUpdatedItem(result.ListedItemId);
+                            item.Amount += result.Amount;
+                            item.MaxAmountToBuy -= result.Amount;
+                            await listingService.StoreItem(item);
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                        }
+                        else
+                        {
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                            var item = await listingService.GetUpdatedItem(result.ListedItemId);
+                            await listingService.ModifySuspended(item, false);
+                        }
+                        break;
+                    }
                 case EventType.ListItemResult:
+                    {
+                        var result = JsonConvert.DeserializeObject<BuyItemEvent>(eventMessage.JsonEvent);
+                        if (result.Result == EventResult.Success)
+                        {
+                            var item = await listingService.GetUpdatedItem(result.ListedItemId);
+                            await listingService.ModifySuspended(item, false);
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                        }
+                        else
+                        {
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                            var item = await listingService.GetUpdatedItem(result.ListedItemId);
+                            await listingService.RemoveListingRequest(result.OriginatingPlayerSteamId, item);
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                        }
+                        break;
+                    }
                     break;
                 default:
                     break;

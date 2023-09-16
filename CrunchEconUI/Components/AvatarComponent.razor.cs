@@ -2,6 +2,7 @@
 using CrunchEconUI.Models;
 using CrunchEconUI.Services;
 using Microsoft.AspNetCore.Components;
+using Radzen;
 
 namespace CrunchEconUI.Components
 {
@@ -10,22 +11,32 @@ namespace CrunchEconUI.Components
         [Parameter]
         public UserInfo? User { get; set; }
         [Inject]
-        public PlayerBalanceService BalanceService { get; set; }
+        public PlayerBalanceAndNotifyService BalanceService { get; set; }
 
         public async ValueTask DisposeAsync()
         {
             BalanceService.RefreshListings -= RefreshBalance;
+            BalanceService.SendNotification -= Notify;
         }
 
         protected override async Task OnInitializedAsync()
         {
             BalanceService.RefreshListings += RefreshBalance;
+            BalanceService.SendNotification += Notify;
         }
 
         public async void RefreshBalance(ulong steamId)
         {
             if (User?.SteamId == steamId) {
                 await InvokeAsync(StateHasChanged);
+            }
+        }
+
+        public async void Notify(ulong steamId, string notification)
+        {
+            if (User?.SteamId == steamId)
+            {
+                await DialogService.Alert($"{notification}", "Notification", new ConfirmOptions() { OkButtonText = $"Close"});
             }
         }
     }
