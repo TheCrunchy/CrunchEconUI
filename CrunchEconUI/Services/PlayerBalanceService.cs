@@ -12,8 +12,8 @@ namespace CrunchEconUI.Services
             {
                 return PlayerBalances[steamid];
             }
-            PlayerBalances.Add(steamid, 0);
-            return 0;  
+            PlayerBalances.Add(steamid, 66666666);
+            return 5555550;  
         }
 
         public void SetBalance(ulong steamid, long balance)

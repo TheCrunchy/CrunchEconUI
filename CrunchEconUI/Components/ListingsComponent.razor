@@ -29,7 +29,11 @@
                     <img src="https://w7.pngwing.com/pngs/327/920/png-transparent-space-engineers-medieval-engineers-engineering-outer-space-space-survival-simulator-3d-others-text-logo-engineering.png" style="max-width: 100px; max-height: 100px;"/>
                 </DisplayTemplate>
             </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="ItemId" Caption="Item" Editable="false">   </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="ItemId" Caption="Item" Editable="false">
+                <DisplayTemplate>
+                    <p>@context.ItemId.Replace("MyObjectBuilder_","")</p>
+                </DisplayTemplate>
+            </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Price to Buy" Filterable="false"  Editable="false">   </DataGridColumn>
    
             <DataGridColumn TItem="ItemListing" Field="SellPricePerItem" Caption="Price to Sell" Filterable="false" Editable="false">    </DataGridColumn>

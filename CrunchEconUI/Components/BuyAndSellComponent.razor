@@ -67,7 +67,7 @@
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
-            listingService.ModifySuspended(ListedItem);
+            listingService.ModifySuspended(ListedItem, true);
 
         }
         return;
@@ -95,7 +95,7 @@
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
-            listingService.ModifySuspended(ListedItem);
+            listingService.ModifySuspended(ListedItem, true);
             var buy = new BuyItemEvent();
             buy.ListedItemId = ListedItem.ListingId;
             buy.SellerSteamId = ListedItem.OwnerId;

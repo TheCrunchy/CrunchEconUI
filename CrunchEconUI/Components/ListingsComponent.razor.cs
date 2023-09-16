@@ -59,12 +59,20 @@ namespace CrunchEconUI.Components
         {
             listingService.RefreshListings += Reload;
             Items = await listingService.GetListings();
-            Items = Items.OrderBy(x => x.SellPricePerItem).ToList();
+            Items = Items.Where(x => !x.Suspended).OrderBy(x => x.SellPricePerItem).ToList();
+            return;
         }
 
         public async void Reload(ItemListing item)
         {
-            Items = Items.Where(x => x.ListingId != item.ListingId).ToList();
+            if (item.Suspended)
+            {
+                Items = Items.Where(x => x.ListingId != item.ListingId).ToList();
+            }
+            else {
+                Items = Items.Where(x => !x.Suspended).ToList();
+            }
+            
             await GridRef?.Reload();
             await GridRef?.Refresh();
 
