@@ -16,7 +16,7 @@
             {
                 <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy />
             }
-            @if (ListedItem.IsBuying && ListedItem.Amount < ListedItem.MaxAmountToBuy)
+            @if (ListedItem.IsBuying && ListedItem.MaxAmountToBuy > 0)
             {
                 <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell />
             }
@@ -58,7 +58,7 @@
             return;
         }
 
-        var buyableAmount = ListedItem.MaxAmountToBuy - ListedItem.Amount;
+        var buyableAmount = ListedItem.MaxAmountToBuy;
         if (buyableAmount < Amount)
         {
             Amount = buyableAmount;
@@ -68,6 +68,25 @@
         if (confirmed != null && confirmed.Value)
         {
             listingService.ModifySuspended(ListedItem, true);
+
+            var buy = new BuyItemEvent();
+            buy.ListedItemId = ListedItem.ListingId;
+            buy.SellerSteamId = ListedItem.OwnerId;
+            buy.Price = Amount * ListedItem.SellPricePerItem;
+            buy.Amount = Amount;
+            buy.BuyerSteamId = User.SteamId;
+            buy.DefinitionIdString = $"{ListedItem.ItemId}";
+            buy.OriginatingPlayerSteamId = User.SteamId;
+            buy.RaisedAt = DateTime.Now;
+            buy.IsAdminSale = true;
+
+            var final = new Event();
+
+            final.EventType = EventType.SellItem;
+            final.JsonEvent = JsonConvert.SerializeObject(buy);
+
+            eventService.AddEvent(User.SteamId, final);
+
 
         }
         return;
@@ -108,14 +127,14 @@
             buy.IsAdminSale = true;
 
             var final = new Event();
-            
+
             final.EventType = EventType.BuyItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
 
             eventService.AddEvent(User.SteamId, final);
         }
 
-        
+
         return;
     }
 

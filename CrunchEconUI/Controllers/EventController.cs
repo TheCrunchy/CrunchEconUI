@@ -98,6 +98,7 @@ namespace CrunchEconUI.Controllers
                             }
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully bought {result.Amount} of {result.DefinitionIdString}");
+                            await listingService.ModifySuspended(item, false);
                         }
                         else
                         {
@@ -119,10 +120,13 @@ namespace CrunchEconUI.Controllers
                             item.MaxAmountToBuy -= result.Amount;
                             await listingService.StoreItem(item);
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                            await listingService.ModifySuspended(item, false);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully sold {result.Amount} of {result.DefinitionIdString}");
                         }
                         else
                         {
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to sell {result.Amount} of {result.DefinitionIdString}, reason <p class=\"PriceRed\">{result.Result}<p>");
                             var item = await listingService.GetUpdatedItem(result.ListedItemId);
                             await listingService.ModifySuspended(item, false);
                         }

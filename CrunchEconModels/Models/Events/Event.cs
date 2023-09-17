@@ -11,6 +11,5 @@ namespace CrunchEconModels.Models.Events
         public EventType EventType { get; set; }
         public string JsonEvent { get; set; }
         public Guid EventId = Guid.NewGuid();
-
     }
 }

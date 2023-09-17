@@ -1,5 +1,6 @@
 ﻿using CrunchEconModels.Models.Events;
 using Microsoft.AspNetCore.Http.Features;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CrunchEconUI.Services
@@ -10,7 +11,12 @@ namespace CrunchEconUI.Services
         
         public Dictionary<ulong, List<Event>> GetPlayersEvents(List<ulong> players)
         {
-            return playersEvents.Where(x => players.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+            var events = playersEvents.Where(x => players.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+            foreach (var ev in events)
+            {
+                playersEvents.Remove(ev.Key);
+            }
+            return events;
         }
 
         public void AddEvent(ulong playerId, Event playerEvent)
