@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 CrunchEconUI/appsettings.json
 *.json
+/CrunchEconUI/wwwroot/Images
