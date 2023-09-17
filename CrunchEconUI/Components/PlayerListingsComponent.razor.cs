@@ -25,7 +25,7 @@ namespace CrunchEconUI.Components
             "Amount High to Low",
         };
 
-        public async void Changed()
+        public async Task Changed()
         {
             switch (Bound)
             {
@@ -70,13 +70,11 @@ namespace CrunchEconUI.Components
                 Items = Items.Where(x => x.ListingId != item.ListingId).ToList();
             }
             else {
+                Items.Add(item);
                 Items = Items.Where(x => !x.Suspended).ToList();
             }
-            
-            await GridRef?.Reload();
-            await GridRef?.Refresh();
 
-            await InvokeAsync(StateHasChanged);
+            await Changed();
         }
 
         public async ValueTask DisposeAsync()
