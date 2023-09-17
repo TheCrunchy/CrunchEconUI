@@ -8,6 +8,8 @@ namespace CrunchEconUI.Components
 {
     public partial class PlayerListingsComponent : IAsyncDisposable
     {
+        [Inject]
+        public EventService eventService { get; set; }
         [Inject] IListingsService listingService { get; set; }
         List<ItemListing> Items = new();
         public DataGrid<ItemListing> GridRef { get; set; }

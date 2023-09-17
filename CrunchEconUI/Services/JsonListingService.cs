@@ -65,7 +65,7 @@ namespace CrunchEconUI.Services
             });
             ListedItems.Add(Id2, new ItemListing()
             {
-                ItemId = "ExampleId2",
+                ItemId = "MyObjectBuilder_Component/PlasmaCredit",
                 BuyPricePerItem = 55,
                 SellPricePerItem = 7,
                 ListingId = Id2,
@@ -78,7 +78,7 @@ namespace CrunchEconUI.Services
             });
             ListedItems.Add(Id3, new ItemListing()
             {
-                ItemId = "ExampleId3",
+                ItemId = "MyObjectBuilder_Ingot/Gold",
                 BuyPricePerItem = 500,
                 SellPricePerItem = 3,
                 ListingId = Id3,

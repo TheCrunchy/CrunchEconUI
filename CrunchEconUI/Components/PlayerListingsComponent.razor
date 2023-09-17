@@ -26,7 +26,9 @@
 
             <DataGridColumn TItem="ItemListing" Field="ItemIdImage" Caption="" Filterable="false" Editable="false">
                 <DisplayTemplate>
-                    <img src="https://w7.pngwing.com/pngs/327/920/png-transparent-space-engineers-medieval-engineers-engineering-outer-space-space-survival-simulator-3d-others-text-logo-engineering.png" style="max-width: 100px; max-height: 100px;"/>
+                    <RadzenImage Path="@eventService.GetTexture(@context.ItemId)" Style="max-width: 100px; max-height: 100px;" />
+      
+
                 </DisplayTemplate>
             </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="ItemId" Caption="Item" Editable="false">

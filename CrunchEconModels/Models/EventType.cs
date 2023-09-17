@@ -14,6 +14,7 @@ namespace CrunchEconModels.Models
         ListItemResult,
         ListItem,
         BuyItem,
-        SellItem
+        SellItem,
+        TextureEvent
     }
 }

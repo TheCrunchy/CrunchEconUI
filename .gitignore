@@ -364,3 +364,4 @@ FodyWeavers.xsd
 CrunchEconUI/appsettings.json
 *.json
 /CrunchEconUI/wwwroot/Images
+/CrunchEconUI/wwwroot/Textures

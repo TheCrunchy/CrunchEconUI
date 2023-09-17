@@ -77,13 +77,21 @@ namespace CrunchEconUI.Controllers
         {
             switch (eventMessage.EventType)
             {
-                case EventType.BalanceUpdate:
-                    var balances = JsonConvert.DeserializeObject<List<BalanceUpdateEvent>>(eventMessage.JsonEvent);
-                    foreach (var balance in balances)
+                case EventType.TextureEvent:
                     {
-                        balanceService.SetBalance(balance.OriginatingPlayerSteamId, balance.Balance);
+                        var text = JsonConvert.DeserializeObject<TextureEvent>(eventMessage.JsonEvent);
+                        eventService.AddTexture(text.DefinitionId, text);
+                        break;
                     }
-                    break;
+                case EventType.BalanceUpdate:
+                    {
+                        var balances = JsonConvert.DeserializeObject<List<BalanceUpdateEvent>>(eventMessage.JsonEvent);
+                        foreach (var balance in balances)
+                        {
+                            balanceService.SetBalance(balance.OriginatingPlayerSteamId, balance.Balance);
+                        }
+                        break;
+                    }
                 case EventType.BuyItemResult:
                     {
                         var result = JsonConvert.DeserializeObject<BuyItemEvent>(eventMessage.JsonEvent);
