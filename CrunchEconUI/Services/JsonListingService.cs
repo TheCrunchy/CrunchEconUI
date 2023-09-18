@@ -26,7 +26,16 @@ namespace CrunchEconUI.Services
                 RefreshListings?.Invoke(listed);
             }
         }
+        public async Task DeleteListing(ItemListing item)
+        {
+            if (ListedItems.TryGetValue(item.ListingId, out var listed))
+            {
+                listed.Deleted = true;
+                ListedItems.Remove(listed.ListingId);
 
+                RefreshListings?.Invoke(listed);
+            }
+        }
         public async Task<bool> IsSuspended(Guid itemId)
         {
             if (ListedItems.ContainsKey(itemId))

@@ -16,5 +16,6 @@ namespace CrunchEconUI.Services
         Task RemoveListingRequest(ulong steamId, ItemListing listing);
         Task ModifySuspended(ItemListing item, bool suspended = false);
         Action<ItemListing>? RefreshListings { get; set; }
+        Task DeleteListing(ItemListing item);
     }
 }

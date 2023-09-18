@@ -77,6 +77,25 @@ namespace CrunchEconUI.Controllers
         {
             switch (eventMessage.EventType)
             {
+                case EventType.DeleteListing:
+                    {
+                        var result = JsonConvert.DeserializeObject<DeleteListingEvent>(eventMessage.JsonEvent);
+                        if (result.Result == EventResult.Success)
+                        {
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                            listingService.DeleteListing(result.Listing);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully deleted {result.Listing.Amount} of {result.Listing.ItemId}");
+                        }
+                        else
+                        {
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to delete Listing, reason <p class=\"PriceRed\">{result.Result}</p>");
+                            var item = result.Listing;
+                            item.Suspended = false;
+                            item.Deleted = false;
+                            await listingService.ModifySuspended(item, false);
+                        }
+                        break;
+                    }
                 case EventType.TextureEvent:
                     {
                         var text = JsonConvert.DeserializeObject<TextureEvent>(eventMessage.JsonEvent);
@@ -111,7 +130,7 @@ namespace CrunchEconUI.Controllers
                         else
                         {
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
-                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to buy {result.Amount} of {result.DefinitionIdString}, reason <p class=\"PriceRed\">{result.Result}<p>");
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to buy {result.Amount} of {result.DefinitionIdString}, reason <p class=\"PriceRed\">{result.Result}</p>");
                             var item = await listingService.GetUpdatedItem(result.ListedItemId);
                             await listingService.ModifySuspended(item, false);
                         }

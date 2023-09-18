@@ -67,7 +67,7 @@ namespace CrunchEconUI.Components
 
         public async void Reload(ItemListing item)
         {
-            if (item.Suspended)
+            if (item.Suspended || item.Deleted)
             {
                 Items = Items.Where(x => x.ListingId != item.ListingId).ToList();
             }

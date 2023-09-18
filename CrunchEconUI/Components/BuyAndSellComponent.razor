@@ -6,6 +6,7 @@
 @using Newtonsoft.Json;
 @using Radzen
 @using Radzen.Blazor
+@using System.Text;
 
 <div>
     @*     <RadzenCard> *@
@@ -51,20 +52,39 @@
     {
         ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
         var susp = await IsSuspended();
-        if (susp)
+        if (susp || ListedItem.Deleted)
         {
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
         }
-
-
+        listingService.ModifySuspended(ListedItem, true);
+        var refundMessage = new StringBuilder();
+        if (ListedItem.IsBuying && ListedItem.MaxAmountToBuy > 0)
+        {
+            refundMessage.AppendLine($"Total Refund for listing {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p > <br>");
+        }
+        if (ListedItem.IsSelling && ListedItem.Amount > 0)
+        {
+            refundMessage.AppendLine($"Item Refund for listing {Amount:n0} of {ListedItem.ItemId} <br>");
+        }
+        var confirmed = await DialogService.Confirm(refundMessage.ToString(), "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
+        if (confirmed != null && confirmed.Value)
+        {
+            var final = new Event();
+            var del = new DeleteListingEvent();
+            del.Listing = ListedItem;
+            del.OriginatingPlayerSteamId = ListedItem.OwnerId;
+            final.EventType = EventType.DeleteListing;
+            final.JsonEvent = JsonConvert.SerializeObject(del);
+            eventService.AddEvent(User.SteamId, final);
+        }
     }
 
     public async Task ClickSell()
     {
         ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
         var susp = await IsSuspended();
-        if (susp)
+        if (susp || ListedItem.Deleted)
         {
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
@@ -112,7 +132,7 @@
     {
         ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
         var susp = await IsSuspended();
-        if (susp)
+        if (susp || ListedItem.Deleted)
         {
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;

@@ -15,5 +15,6 @@ namespace CrunchEconModels.Models
         public ulong OwnerId { get; set; }
         public bool IsAdminListing { get; set; }
         public bool Suspended { get; set; }
+        public bool Deleted { get; set; }
     }
 }
