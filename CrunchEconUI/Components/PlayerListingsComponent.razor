@@ -8,6 +8,8 @@
 
 
 <div class="container-fluid">
+    <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Text="Create Listing" />
+
     <DataGrid TItem="ItemListing"
               Data="@Items.Where(x => !x.Suspended)"
               EditMode="Blazorise.DataGrid.DataGridEditMode.Popup"
@@ -23,11 +25,10 @@
               SubmitFormOnEnter="false"
               Filterable="true" PopupSize="Blazorise.ModalSize.ExtraLarge" @ref=@GridRef>
         <ChildContent>
-
             <DataGridColumn TItem="ItemListing" Field="ItemIdImage" Caption="" Filterable="false" Editable="false">
                 <DisplayTemplate>
                     <RadzenImage Path="@eventService.GetTexture(@context.ItemId)" Style="max-width: 100px; max-height: 100px;" />
-      
+
 
                 </DisplayTemplate>
             </DataGridColumn>
@@ -36,23 +37,26 @@
                     <p>@context.ItemId.Replace("MyObjectBuilder_","")</p>
                 </DisplayTemplate>
             </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Price to Buy" Filterable="false"  Editable="false">   </DataGridColumn>
-   
+            <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Price to Buy" Filterable="false" Editable="false">   </DataGridColumn>
+
             <DataGridColumn TItem="ItemListing" Field="SellPricePerItem" Caption="Price to Sell" Filterable="false" Editable="false">    </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="Amount" Caption="Amount" Editable="false" Filterable="false" Sortable="true">   </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="MaxAmountToBuy" Caption="Buying up to" Filterable="false" Editable="false">   </DataGridColumn>
-     @*       <DataGridColumn TItem="ItemListing" Field="OwnerId" Caption="Owner" Editable="false">   </DataGridColumn>*@
-            <DataGridCommandColumn TItem="ItemListing" DeleteCommandAllowed="false">
+            @*       <DataGridColumn TItem="ItemListing" Field="OwnerId" Caption="Owner" Editable="false">   </DataGridColumn>*@
+            <DataGridCommandColumn TItem="ItemListing" DeleteCommandAllowed="true">
                 <CancelCommandTemplate>
                     <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="cancel" Click="@(args => context.Clicked.InvokeAsync())"></RadzenButton>
                 </CancelCommandTemplate>
                 <SaveCommandTemplate>
                 </SaveCommandTemplate>
                 <ClearFilterCommandTemplate>
-           
-                        <RadzenDropDown TValue="string" @bind-Value=@Bound Data=@Sorting Change="@Changed" Style="width: 100%; max-width: 400px;" />
-         
+
+                    <RadzenDropDown TValue="string" @bind-Value=@Bound Data=@Sorting Change="@Changed" Style="width: 100%; max-width: 400px;" />
+
                 </ClearFilterCommandTemplate>
+                <DeleteCommandTemplate>
+                  
+                </DeleteCommandTemplate>
                 <EditCommandTemplate>
                     <BuyAndSellComponent ListedItem="@context.Item" User="User"></BuyAndSellComponent>
                 </EditCommandTemplate>

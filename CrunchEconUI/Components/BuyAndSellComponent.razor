@@ -8,21 +8,21 @@
 @using Radzen.Blazor
 
 <div>
-    <RadzenCard>
-        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Amount</RadzenText>
-        <NumericPicker @bind-Value="@Amount" Min="0" Max=@Int32.MaxValue> </NumericPicker>
-        <div class="rz-p-6 rz-text-align-center">
-            @if (ListedItem.IsSelling)
-            {
-                <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy />
-            }
-            @if (ListedItem.IsBuying && ListedItem.MaxAmountToBuy > 0)
-            {
-                <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell />
-            }
+    @*     <RadzenCard> *@
+    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Amount</RadzenText>
+    <NumericPicker @bind-Value="@Amount" Min="0" Max=@Int32.MaxValue> </NumericPicker>
+    <div class="rz-p-6 rz-text-align-center">
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="Radzen.FlexWrap.Wrap">
 
-        </div>
-    </RadzenCard>
+            <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy Disabled=@(!ListedItem.IsSelling) />
+
+            <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell Disabled=@(!ListedItem.IsBuying) />
+
+            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@(args => { })" Disabled=@(ListedItem.OwnerId != User.SteamId)></RadzenButton>
+
+        </RadzenStack>
+    </div>
+    @*     </RadzenCard> *@
 </div>
 
 @code {
@@ -46,6 +46,18 @@
     public async Task<bool> IsSuspended()
     {
         return await listingService.IsSuspended(ListedItem.ListingId);
+    }
+    public async Task ClickDelete()
+    {
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
+        var susp = await IsSuspended();
+        if (susp)
+        {
+            await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
+            return;
+        }
+
+
     }
 
     public async Task ClickSell()
