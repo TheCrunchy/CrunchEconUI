@@ -57,6 +57,7 @@
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
         }
+        listingService.ModifySuspended(ListedItem, true);
 
         var buyableAmount = ListedItem.MaxAmountToBuy;
         if (buyableAmount < Amount)
@@ -67,8 +68,6 @@
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
-            listingService.ModifySuspended(ListedItem, true);
-
             var buy = new BuyItemEvent();
             buy.ListedItemId = ListedItem.ListingId;
             buy.SellerSteamId = ListedItem.OwnerId;
@@ -89,6 +88,11 @@
 
 
         }
+        else
+        {
+            listingService.ModifySuspended(ListedItem, false);
+
+        }
         return;
     }
 
@@ -101,6 +105,8 @@
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
         }
+        listingService.ModifySuspended(ListedItem, true);
+
         if (Amount > ListedItem.Amount)
         {
             Amount = ListedItem.Amount;
@@ -114,7 +120,6 @@
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
-            listingService.ModifySuspended(ListedItem, true);
             var buy = new BuyItemEvent();
             buy.ListedItemId = ListedItem.ListingId;
             buy.SellerSteamId = ListedItem.OwnerId;
@@ -132,6 +137,11 @@
             final.JsonEvent = JsonConvert.SerializeObject(buy);
 
             eventService.AddEvent(User.SteamId, final);
+        }
+        else
+        {
+            listingService.ModifySuspended(ListedItem, false);
+
         }
 
 
