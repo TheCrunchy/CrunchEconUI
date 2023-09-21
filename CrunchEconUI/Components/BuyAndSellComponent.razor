@@ -19,7 +19,7 @@
 
             <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell Disabled=@(!ListedItem.IsBuying) />
 
-            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@(args => { })" Disabled=@(ListedItem.OwnerId != User.SteamId)></RadzenButton>
+            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete" Disabled=@(ListedItem.OwnerId != User.SteamId)></RadzenButton>
 
         </RadzenStack>
     </div>
@@ -61,11 +61,11 @@
         var refundMessage = new StringBuilder();
         if (ListedItem.IsBuying && ListedItem.MaxAmountToBuy > 0)
         {
-            refundMessage.AppendLine($"Total Refund for listing {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p > <br>");
+            refundMessage.AppendLine($"Total Refund for listing {ListedItem.Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p > <br>");
         }
         if (ListedItem.IsSelling && ListedItem.Amount > 0)
         {
-            refundMessage.AppendLine($"Item Refund for listing {Amount:n0} of {ListedItem.ItemId} <br>");
+            refundMessage.AppendLine($"Item Refund for listing {ListedItem.Amount:n0} of {ListedItem.ItemId} <br>");
         }
         var confirmed = await DialogService.Confirm(refundMessage.ToString(), "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
@@ -77,6 +77,10 @@
             final.EventType = EventType.DeleteListing;
             final.JsonEvent = JsonConvert.SerializeObject(del);
             eventService.AddEvent(User.SteamId, final);
+        }
+        else
+        {
+            listingService.ModifySuspended(ListedItem, false);
         }
     }
 

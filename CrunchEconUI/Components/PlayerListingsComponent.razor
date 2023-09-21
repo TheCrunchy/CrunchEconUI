@@ -8,7 +8,7 @@
 
 
 <div class="container-fluid">
-    <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Text="Create Listing" />
+ 
 
     <DataGrid TItem="ItemListing"
               Data="@Items.Where(x => !x.Suspended)"
@@ -45,12 +45,12 @@
             @*       <DataGridColumn TItem="ItemListing" Field="OwnerId" Caption="Owner" Editable="false">   </DataGridColumn>*@
             <DataGridCommandColumn TItem="ItemListing" DeleteCommandAllowed="true">
                 <CancelCommandTemplate>
-                    <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="cancel" Click="@(args => context.Clicked.InvokeAsync())"></RadzenButton>
+   @*                  <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="cancel" Click="@(args => context.Clicked.InvokeAsync())"></RadzenButton> *@
                 </CancelCommandTemplate>
                 <SaveCommandTemplate>
                 </SaveCommandTemplate>
                 <ClearFilterCommandTemplate>
-
+                    <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Text="Create Listing" />
                     <RadzenDropDown TValue="string" @bind-Value=@Bound Data=@Sorting Change="@Changed" Style="width: 100%; max-width: 400px;" />
 
                 </ClearFilterCommandTemplate>
