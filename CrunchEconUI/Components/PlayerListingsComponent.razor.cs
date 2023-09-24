@@ -73,7 +73,7 @@ namespace CrunchEconUI.Components
         {
             if (item.Suspended || item.Deleted)
             {
-                Items = Items.Where(x => x.ListingId != item.ListingId).ToList();
+                Items = Items.Where(x => x.Id != item.Id).ToList();
             }
             else {
                 Items.Add(item);

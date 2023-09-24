@@ -47,12 +47,12 @@
 
     public async Task<bool> IsSuspended()
     {
-        return await listingService.IsSuspended(ListedItem.ListingId);
+        return await listingService.IsSuspended(ListedItem.Id);
     }
 
     public async Task ClickWithdraw()
     {
-        ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
         var susp = await IsSuspended();
         if (susp || ListedItem.Deleted)
         {
@@ -70,7 +70,7 @@
         if (confirmed != null && confirmed.Value)
         {
             var buy = new BuyItemEvent();
-            buy.ListedItemId = ListedItem.ListingId;
+            buy.ListedItemId = ListedItem.Id;
             buy.SellerSteamId = ListedItem.OwnerId;
             buy.Price = 0;
             buy.Amount = Amount;
@@ -96,7 +96,7 @@
 
     public async Task ClickDelete()
     {
-        ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
         var susp = await IsSuspended();
         if (susp || ListedItem.Deleted)
         {
@@ -132,7 +132,7 @@
 
     public async Task ClickSell()
     {
-        ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
         var susp = await IsSuspended();
         if (susp || ListedItem.Deleted)
         {
@@ -151,7 +151,7 @@
         if (confirmed != null && confirmed.Value)
         {
             var buy = new BuyItemEvent();
-            buy.ListedItemId = ListedItem.ListingId;
+            buy.ListedItemId = ListedItem.Id;
             buy.SellerSteamId = ListedItem.OwnerId;
             buy.Price = Amount * ListedItem.SellPricePerItem;
             buy.Amount = Amount;
@@ -180,7 +180,7 @@
 
     public async Task ClickBuy()
     {
-        ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
         var susp = await IsSuspended();
         if (susp || ListedItem.Deleted)
         {
@@ -203,7 +203,7 @@
         if (confirmed != null && confirmed.Value)
         {
             var buy = new BuyItemEvent();
-            buy.ListedItemId = ListedItem.ListingId;
+            buy.ListedItemId = ListedItem.Id;
             buy.SellerSteamId = ListedItem.OwnerId;
             buy.Price = Amount * ListedItem.BuyPricePerItem;
             buy.Amount = Amount;

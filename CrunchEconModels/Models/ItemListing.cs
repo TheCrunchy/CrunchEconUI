@@ -3,7 +3,7 @@ namespace CrunchEconModels.Models
 {
     public class ItemListing
     {
-        public Guid ListingId { get; set; }
+        public Guid Id { get; set; }
         public string ItemId { get; set; }
         public string ItemIdImage { get; set; }
         public long SellPricePerItem { get; set; }
@@ -16,7 +16,5 @@ namespace CrunchEconModels.Models
         public bool IsAdminListing { get; set; }
         public bool Suspended { get; set; }
         public bool Deleted { get; set; }
-
-        public ItemDefinition ItemDefinition { get; set; }
     }
 }

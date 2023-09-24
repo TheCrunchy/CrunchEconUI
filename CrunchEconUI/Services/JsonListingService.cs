@@ -18,20 +18,20 @@ namespace CrunchEconUI.Services
 
         public async Task ModifySuspended(ItemListing item, bool suspended = true)
         {
-            if (ListedItems.TryGetValue(item.ListingId, out var listed))
+            if (ListedItems.TryGetValue(item.Id, out var listed))
             {
                 listed.Suspended = suspended;
-                ListedItems[item.ListingId] = listed;
+                ListedItems[item.Id] = listed;
 
                 RefreshListings?.Invoke(listed);
             }
         }
         public async Task DeleteListing(ItemListing item)
         {
-            if (ListedItems.TryGetValue(item.ListingId, out var listed))
+            if (ListedItems.TryGetValue(item.Id, out var listed))
             {
                 listed.Deleted = true;
-                ListedItems.Remove(listed.ListingId);
+                ListedItems.Remove(listed.Id);
 
                 RefreshListings?.Invoke(listed);
             }
@@ -64,7 +64,7 @@ namespace CrunchEconUI.Services
                 ItemId = "MyObjectBuilder_Ingot/Iron",
                 BuyPricePerItem = 50,
                 SellPricePerItem = 5,
-                ListingId = Id1,
+                Id = Id1,
                 IsBuying = true,
                 IsSelling = true,
                 Amount = 50,
@@ -77,7 +77,7 @@ namespace CrunchEconUI.Services
                 ItemId = "MyObjectBuilder_Component/PlasmaCredit",
                 BuyPricePerItem = 55,
                 SellPricePerItem = 7,
-                ListingId = Id2,
+                Id = Id2,
                 IsBuying = true,
                 IsSelling = true,
                 Amount = 50,
@@ -90,7 +90,7 @@ namespace CrunchEconUI.Services
                 ItemId = "MyObjectBuilder_Ingot/Gold",
                 BuyPricePerItem = 500,
                 SellPricePerItem = 3,
-                ListingId = Id3,
+                Id = Id3,
                 IsBuying = false,
                 IsSelling = true,
                 Amount = 50,
@@ -106,7 +106,7 @@ namespace CrunchEconUI.Services
                     ItemId = "ExampleId3",
                     BuyPricePerItem = 50,
                     SellPricePerItem = 75,
-                    ListingId = Id,
+                    Id = Id,
                     IsBuying = false,
                     IsSelling = true,
                     Amount = 50,
@@ -139,12 +139,12 @@ namespace CrunchEconUI.Services
 
         public async Task StoreItem(ItemListing listing)
         {
-            if (ListedItems.ContainsKey(listing.ListingId))
+            if (ListedItems.ContainsKey(listing.Id))
             {
-                ListedItems[listing.ListingId] = listing;
+                ListedItems[listing.Id] = listing;
                 return;
             }
-            ListedItems.Add(listing.ListingId, listing);
+            ListedItems.Add(listing.Id, listing);
 
             RefreshListings?.Invoke(listing);
         }
