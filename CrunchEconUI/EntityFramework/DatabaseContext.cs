@@ -10,6 +10,11 @@ namespace CrunchEconUI.EntityFramework
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseNpgsql($"Data Source={DbPath}");
 
+        public DatabaseContext(string dbPath)
+        {
+            DbPath = dbPath;
+        }
+
         public DbSet<ItemListing> PlayerItemListings { get; set; }
         
     }
