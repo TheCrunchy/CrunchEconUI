@@ -50,7 +50,7 @@
                 <SaveCommandTemplate>
                 </SaveCommandTemplate>
                 <ClearFilterCommandTemplate>
-                    <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Text="Create Listing" />
+                    <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Success" Text="Create Listing" Click="@CreateListing" />
                     <RadzenDropDown TValue="string" @bind-Value=@Bound Data=@Sorting Change="@Changed" Style="width: 100%; max-width: 400px;" />
 
                 </ClearFilterCommandTemplate>
@@ -66,6 +66,3 @@
 
 </div>
 
-@code {
-
-}

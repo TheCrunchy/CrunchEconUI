@@ -83,13 +83,22 @@ namespace CrunchEconUI.Services
 
         }
 
+        public List<String> GetAllIds()
+        {
+            return Textures.Values.Select(x => x.DefinitionId.Replace("MyObjectBuilder_","")).ToList();
+        }
+
         public string GetTexture(string definition)
         {
+          
             if (definition == null)
             {
                 return V;
             }
-            if (!Textures.ContainsKey(definition))
+            if (!definition.StartsWith("MyObjectBuilder_")){
+                definition = "MyObjectBuilder_" + definition;
+            }
+                if (!Textures.ContainsKey(definition))
             {
                 return V;
 

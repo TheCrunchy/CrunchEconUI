@@ -16,5 +16,7 @@ namespace CrunchEconModels.Models
         public bool IsAdminListing { get; set; }
         public bool Suspended { get; set; }
         public bool Deleted { get; set; }
+
+        public ItemDefinition ItemDefinition { get; set; }
     }
 }

@@ -1,0 +1,11 @@
+﻿<RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Item Search</RadzenText>
+<RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString())) class="w-100" />
+
+<RadzenDropDown @bind-Value="ListedItem.ItemId" AllowClear="true" Placeholder="Select an ItemId" Data="@definitionIds" Style="width: 100%;"></RadzenDropDown>
+@if (!String.IsNullOrWhiteSpace(ListedItem.ItemId))
+{
+    <RadzenImage Path="@eventService.GetTexture(@ListedItem.ItemId)" Style="max-width: 100px; max-height: 100px;" />
+
+}
+<RadzenButton ButtonType="Radzen.ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Save" Click="@Submit" />
+

@@ -3,6 +3,8 @@ using CrunchEconModels.Models;
 using CrunchEconUI.Models;
 using CrunchEconUI.Services;
 using Microsoft.AspNetCore.Components;
+using Radzen;
+using System;
 
 namespace CrunchEconUI.Components
 {
@@ -10,6 +12,8 @@ namespace CrunchEconUI.Components
     {
         [Inject]
         public EventService eventService { get; set; }
+        [Inject]
+         DialogService DialogService { get; set; }
         [Inject] IListingsService listingService { get; set; }
         List<ItemListing> Items = new();
         public DataGrid<ItemListing> GridRef { get; set; }
@@ -77,6 +81,17 @@ namespace CrunchEconUI.Components
             }
 
             await Changed();
+        }
+
+        public async Task CreateListing()
+        {
+            var ListedItem = new ItemListing();
+            ListedItem.OwnerId = User.SteamId;
+          
+                await DialogService.OpenAsync<NewListingComponent>($"New Listing",
+                       new Dictionary<string, object>() { { "User", User } },
+                       new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
+            
         }
 
         public async ValueTask DisposeAsync()
