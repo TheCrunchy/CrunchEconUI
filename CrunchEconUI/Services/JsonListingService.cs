@@ -55,66 +55,66 @@ namespace CrunchEconUI.Services
             {
                 return ListedItems.ToList().Select(x => x.Value).ToList();
             }
-            ListedItems.Clear();
-            var Id1 = Guid.NewGuid();
-            var Id2 = Guid.NewGuid();
-            var Id3 = Guid.NewGuid();
-            ListedItems.Add(Id1, new ItemListing()
-            {
-                ItemId = "MyObjectBuilder_Ingot/Iron",
-                BuyPricePerItem = 50,
-                SellPricePerItem = 5,
-                Id = Id1,
-                IsBuying = true,
-                IsSelling = true,
-                Amount = 50,
-                MaxAmountToBuy = 100,
-                OwnerId = 76561198045390854,
-                Suspended = false,
-            });
-            ListedItems.Add(Id2, new ItemListing()
-            {
-                ItemId = "MyObjectBuilder_Component/PlasmaCredit",
-                BuyPricePerItem = 55,
-                SellPricePerItem = 7,
-                Id = Id2,
-                IsBuying = true,
-                IsSelling = true,
-                Amount = 50,
-                MaxAmountToBuy = 100,
-                OwnerId = 76561198045390854,
-                Suspended = false,
-            });
-            ListedItems.Add(Id3, new ItemListing()
-            {
-                ItemId = "MyObjectBuilder_Ingot/Gold",
-                BuyPricePerItem = 500,
-                SellPricePerItem = 3,
-                Id = Id3,
-                IsBuying = false,
-                IsSelling = true,
-                Amount = 50,
-                MaxAmountToBuy = 100,
-                OwnerId = 76561198045390854,
-                Suspended = false
-            });
-            for (int i = 0; i < 50; i++)
-            {
-                Guid Id = Guid.NewGuid();
-                ListedItems.Add(Id, new ItemListing()
-                {
-                    ItemId = "ExampleId3",
-                    BuyPricePerItem = 50,
-                    SellPricePerItem = 75,
-                    Id = Id,
-                    IsBuying = false,
-                    IsSelling = true,
-                    Amount = 50,
-                    MaxAmountToBuy = 100,
-                    OwnerId = 76561198045390854,
-                    Suspended = false
-                });
-            }
+            //ListedItems.Clear();
+            //var Id1 = Guid.NewGuid();
+            //var Id2 = Guid.NewGuid();
+            //var Id3 = Guid.NewGuid();
+            //ListedItems.Add(Id1, new ItemListing()
+            //{
+            //    ItemId = "MyObjectBuilder_Ingot/Iron",
+            //    BuyPricePerItem = 50,
+            //    SellPricePerItem = 5,
+            //    Id = Id1,
+            //    IsBuying = true,
+            //    IsSelling = true,
+            //    Amount = 50,
+            //    MaxAmountToBuy = 100,
+            //    OwnerId = 76561198045390854,
+            //    Suspended = false,
+            //});
+            //ListedItems.Add(Id2, new ItemListing()
+            //{
+            //    ItemId = "MyObjectBuilder_Component/PlasmaCredit",
+            //    BuyPricePerItem = 55,
+            //    SellPricePerItem = 7,
+            //    Id = Id2,
+            //    IsBuying = true,
+            //    IsSelling = true,
+            //    Amount = 50,
+            //    MaxAmountToBuy = 100,
+            //    OwnerId = 76561198045390854,
+            //    Suspended = false,
+            //});
+            //ListedItems.Add(Id3, new ItemListing()
+            //{
+            //    ItemId = "MyObjectBuilder_Ingot/Gold",
+            //    BuyPricePerItem = 500,
+            //    SellPricePerItem = 3,
+            //    Id = Id3,
+            //    IsBuying = false,
+            //    IsSelling = true,
+            //    Amount = 50,
+            //    MaxAmountToBuy = 100,
+            //    OwnerId = 76561198045390854,
+            //    Suspended = false
+            //});
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    Guid Id = Guid.NewGuid();
+            //    ListedItems.Add(Id, new ItemListing()
+            //    {
+            //        ItemId = "ExampleId3",
+            //        BuyPricePerItem = 50,
+            //        SellPricePerItem = 75,
+            //        Id = Id,
+            //        IsBuying = false,
+            //        IsSelling = true,
+            //        Amount = 50,
+            //        MaxAmountToBuy = 100,
+            //        OwnerId = 76561198045390854,
+            //        Suspended = false
+            //    });
+            //}
             return ListedItems.ToList().Select(x => x.Value).ToList();
         }
 
