@@ -19,6 +19,7 @@
 
             <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell Disabled=@(!ListedItem.IsBuying) />
 
+            <RadzenButton Text="Withdraw" ButtonStyle="ButtonStyle.Success" Icon="account_balance_wallet" Click="@ClickWithdraw" Disabled=@(ListedItem.OwnerId != User.SteamId)></RadzenButton>
             <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete" Disabled=@(ListedItem.OwnerId != User.SteamId)></RadzenButton>
 
         </RadzenStack>
@@ -48,6 +49,51 @@
     {
         return await listingService.IsSuspended(ListedItem.ListingId);
     }
+
+    public async Task ClickWithdraw()
+    {
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
+        var susp = await IsSuspended();
+        if (susp || ListedItem.Deleted)
+        {
+            await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
+            return;
+        }
+        listingService.ModifySuspended(ListedItem, true);
+
+        if (Amount > ListedItem.Amount)
+        {
+            Amount = ListedItem.Amount;
+        }
+
+        var confirmed = await DialogService.Confirm($"Withdrawing {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")}", "Confirmation", new ConfirmOptions() { OkButtonText = $"Withdraw", CancelButtonText = "Cancel" });
+        if (confirmed != null && confirmed.Value)
+        {
+            var buy = new BuyItemEvent();
+            buy.ListedItemId = ListedItem.ListingId;
+            buy.SellerSteamId = ListedItem.OwnerId;
+            buy.Price = 0;
+            buy.Amount = Amount;
+            buy.BuyerSteamId = User.SteamId;
+            buy.DefinitionIdString = $"{ListedItem.ItemId}";
+            buy.OriginatingPlayerSteamId = User.SteamId;
+            buy.RaisedAt = DateTime.Now;
+            buy.IsAdminSale = true;
+
+            var final = new Event();
+
+            final.EventType = EventType.BuyItem;
+            final.JsonEvent = JsonConvert.SerializeObject(buy);
+
+            eventService.AddEvent(User.SteamId, final);
+        }
+        else
+        {
+            listingService.ModifySuspended(ListedItem, false);
+
+        }
+    }
+
     public async Task ClickDelete()
     {
         ListedItem = await listingService.GetUpdatedItem(ListedItem.ListingId);
@@ -101,7 +147,7 @@
             Amount = buyableAmount;
         }
 
-        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
+        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} < br >< p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
             var buy = new BuyItemEvent();
@@ -153,7 +199,7 @@
             await DialogService.Alert($"You cannot afford this! Last known balance is <p class=\"PriceRed\">{balance} SC</p>", "Error");
             return;
         }
-        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
+        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} < br > < p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
             var buy = new BuyItemEvent();

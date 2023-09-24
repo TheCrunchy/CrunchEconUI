@@ -88,6 +88,7 @@ namespace CrunchEconUI.Helpers
             catch (Exception e)
             {
                 logger.LogError(e, "An exception occurated when downloading player summaries");
+                return;
             }
             auth.UserInfo = new UserInfo()
             {
