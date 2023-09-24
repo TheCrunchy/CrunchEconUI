@@ -84,7 +84,7 @@ namespace CrunchEconUI.Controllers
                         {
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
                             listingService.DeleteListing(result.Listing);
-                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully deleted {result.Listing.Amount} of {result.Listing.ItemId}");
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully deleted {result.Listing.Amount} of {result.Listing.ItemId.Replace("MyObjectBuilder_","")}");
                         }
                         else
                         {
@@ -119,18 +119,29 @@ namespace CrunchEconUI.Controllers
                             var item = await listingService.GetUpdatedItem(result.ListedItemId);
                             item.Amount -= result.Amount;
                             item.Suspended = false;
-                            if (item.Amount > 0)
+                            await listingService.StoreItem(item);
+                            if (item.Amount <= 0)
                             {
-                                await listingService.StoreItem(item);
+                                if (item.IsBuying)
+                                {
+                                    if (item.MaxAmountToBuy <= 0)
+                                    {
+                                        await listingService.DeleteListing(item);
+                                    }
+                                }
+                                else
+                                {
+                                    await listingService.DeleteListing(item);
+                                }
                             }
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
-                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully bought {result.Amount} of {result.DefinitionIdString}");
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully bought {result.Amount} of {result.DefinitionIdString.Replace("MyObjectBuilder_", "")}");
                             await listingService.ModifySuspended(item, false);
                         }
                         else
                         {
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
-                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to buy {result.Amount} of {result.DefinitionIdString}, reason <p class=\"PriceRed\">{result.Result}</p>");
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to buy {result.Amount} of {result.DefinitionIdString.Replace("MyObjectBuilder_", "")}, reason <p class=\"PriceRed\">{result.Result}</p>");
                             var item = await listingService.GetUpdatedItem(result.ListedItemId);
                             await listingService.ModifySuspended(item, false);
                         }
@@ -148,12 +159,12 @@ namespace CrunchEconUI.Controllers
                             await listingService.StoreItem(item);
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
                             await listingService.ModifySuspended(item, false);
-                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully sold {result.Amount} of {result.DefinitionIdString}");
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully sold {result.Amount} of {result.DefinitionIdString.Replace("MyObjectBuilder_", "")}");
                         }
                         else
                         {
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
-                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to sell {result.Amount} of {result.DefinitionIdString}, reason <p class=\"PriceRed\">{result.Result}<p>");
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to sell {result.Amount} of {result.DefinitionIdString.Replace("MyObjectBuilder_", "")}, reason <p class=\"PriceRed\">{result.Result}<p>");
                             var item = await listingService.GetUpdatedItem(result.ListedItemId);
                             await listingService.ModifySuspended(item, false);
                         }

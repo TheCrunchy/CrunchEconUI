@@ -61,13 +61,13 @@
         var refundMessage = new StringBuilder();
         if (ListedItem.IsBuying && ListedItem.MaxAmountToBuy > 0)
         {
-            refundMessage.AppendLine($"Total Refund for listing {ListedItem.Amount:n0} of {ListedItem.ItemId} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p > <br>");
+            refundMessage.AppendLine($"Total Refund for listing {ListedItem.MaxAmountToBuy:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} <br><p class=\"PriceGreen\">{(ListedItem.MaxAmountToBuy * ListedItem.SellPricePerItem):n0} SC</ p > <br>");
         }
         if (ListedItem.IsSelling && ListedItem.Amount > 0)
         {
-            refundMessage.AppendLine($"Item Refund for listing {ListedItem.Amount:n0} of {ListedItem.ItemId} <br>");
+            refundMessage.AppendLine($"Item Refund for listing {ListedItem.Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} <br>");
         }
-        var confirmed = await DialogService.Confirm(refundMessage.ToString(), "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
+        var confirmed = await DialogService.Confirm(refundMessage.ToString(), "Confirmation", new ConfirmOptions() { OkButtonText = $"Delete Listing", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
             var final = new Event();

@@ -85,6 +85,10 @@ namespace CrunchEconUI.Services
 
         public string GetTexture(string definition)
         {
+            if (definition == null)
+            {
+                return V;
+            }
             if (!Textures.ContainsKey(definition))
             {
                 return V;
