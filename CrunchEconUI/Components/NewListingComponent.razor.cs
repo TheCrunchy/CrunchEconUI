@@ -30,6 +30,8 @@ namespace CrunchEconUI.Components
             definitionIds = eventService.GetAllIds().OrderByDescending(x => x).ToList();
             ListedItem.OwnerId = User.SteamId;
             ListedItem.Suspended = true;
+            ListedItem.SellPricePerItem = 1;
+            ListedItem.BuyPricePerItem = 1;
             return;
         }
 

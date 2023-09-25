@@ -21,13 +21,13 @@
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Sell Price</RadzenText>
             <NumericPicker @bind-Value="@ListedItem.BuyPricePerItem" Min="1" Max=@Int32.MaxValue> </NumericPicker>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Amount to Sell</RadzenText>
-            <NumericPicker @bind-Value="@ListedItem.Amount" Min="1" Max=@Int32.MaxValue> </NumericPicker>
+            <NumericPicker @bind-Value="@ListedItem.Amount" Min="0" Max=@Int32.MaxValue> </NumericPicker>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Buy From Players">
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Buy Price</RadzenText>
             <NumericPicker @bind-Value="@ListedItem.SellPricePerItem" Min="1" Max=@Int32.MaxValue> </NumericPicker>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Amount to Buy</RadzenText>
-            <NumericPicker @bind-Value="@ListedItem.MaxAmountToBuy" Min="1" Max=@Int32.MaxValue> </NumericPicker>
+            <NumericPicker @bind-Value="@ListedItem.MaxAmountToBuy" Min="0" Max=@Int32.MaxValue> </NumericPicker>
         </RadzenTabsItem>
     </Tabs>
 </RadzenTabs>
