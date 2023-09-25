@@ -1,11 +1,35 @@
-﻿<RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Item Search</RadzenText>
-<RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString())) class="w-100" />
+﻿
 
-<RadzenDropDown @bind-Value="ListedItem.ItemId" AllowClear="true" Placeholder="Select an ItemId" Data="@definitionIds" Style="width: 100%;"></RadzenDropDown>
-@if (!String.IsNullOrWhiteSpace(ListedItem.ItemId))
-{
-    <RadzenImage Path="@eventService.GetTexture(@ListedItem.ItemId)" Style="max-width: 100px; max-height: 100px;" />
+<RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="Radzen.JustifyContent.Start" Gap="2rem" Class="rz-p-2">
 
-}
+    <RadzenStack Orientation="Radzen.Orientation.Vertical" Style="width: 70%;">
+
+        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Item Search</RadzenText>
+        <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString())) />
+
+        <RadzenDropDown @bind-Value="ListedItem.ItemId" AllowClear="true" Placeholder="Select an ItemId" Data="@definitionIds" Style="width: 100%;"></RadzenDropDown>
+    </RadzenStack>
+    <RadzenStack>
+        <RadzenImage Path="@eventService.GetTexture(@ListedItem.ItemId)" Style="width: 200px; height: 200px;" />
+    </RadzenStack>
+</RadzenStack>
+
+
+<RadzenTabs RenderMode="TabRenderMode.Client">
+    <Tabs>
+        <RadzenTabsItem Text="Sell To Players">
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Sell Price</RadzenText>
+            <NumericPicker @bind-Value="@ListedItem.BuyPricePerItem" Min="1" Max=@Int32.MaxValue> </NumericPicker>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Amount to Sell</RadzenText>
+            <NumericPicker @bind-Value="@ListedItem.Amount" Min="1" Max=@Int32.MaxValue> </NumericPicker>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Buy From Players">
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Buy Price</RadzenText>
+            <NumericPicker @bind-Value="@ListedItem.SellPricePerItem" Min="1" Max=@Int32.MaxValue> </NumericPicker>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Amount to Buy</RadzenText>
+            <NumericPicker @bind-Value="@ListedItem.MaxAmountToBuy" Min="1" Max=@Int32.MaxValue> </NumericPicker>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
 <RadzenButton ButtonType="Radzen.ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Save" Click="@Submit" />
-

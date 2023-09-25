@@ -90,7 +90,7 @@ namespace CrunchEconUI.Components
           
                 await DialogService.OpenAsync<NewListingComponent>($"New Listing",
                        new Dictionary<string, object>() { { "User", User } },
-                       new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
+                       new DialogOptions() { Width = "50%", Height = "70%", Resizable = true, Draggable = true });
             
         }
 

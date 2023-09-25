@@ -32,6 +32,7 @@ namespace CrunchEconUI.Services
             var textures = JsonConvert.SerializeObject(Textures, Formatting.Indented);
             await File.WriteAllTextAsync(path, textures);
         }
+
         public Dictionary<ulong, List<Event>> GetPlayersEvents(List<ulong> players)
         {
             var events = playersEvents.Where(x => players.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
@@ -39,6 +40,7 @@ namespace CrunchEconUI.Services
             {
                 playersEvents.Remove(ev.Key);
             }
+
             return events;
         }
 
@@ -97,20 +99,21 @@ namespace CrunchEconUI.Services
 
         public List<String> GetAllIds()
         {
-            return Textures.Values.Select(x => x.DefinitionId.Replace("MyObjectBuilder_","")).ToList();
+            return Textures.Values.Select(x => x.DefinitionId.Replace("MyObjectBuilder_", "")).ToList();
         }
 
         public string GetTexture(string definition)
         {
-          
+
             if (definition == null)
             {
                 return V;
             }
-            if (!definition.StartsWith("MyObjectBuilder_")){
+            if (!definition.StartsWith("MyObjectBuilder_"))
+            {
                 definition = "MyObjectBuilder_" + definition;
             }
-                if (!Textures.ContainsKey(definition))
+            if (!Textures.ContainsKey(definition))
             {
                 return V;
 

@@ -11,7 +11,7 @@
 <div>
     @*     <RadzenCard> *@
     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Amount</RadzenText>
-    <NumericPicker @bind-Value="@Amount" Min="0" Max=@Int32.MaxValue> </NumericPicker>
+    <NumericPicker @bind-Value="@Amount" Min="1" Max=@Int32.MaxValue> </NumericPicker>
     <div class="rz-p-6 rz-text-align-center">
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="Radzen.FlexWrap.Wrap">
 
@@ -197,6 +197,7 @@
         if (balance < Amount * ListedItem.BuyPricePerItem)
         {
             await DialogService.Alert($"You cannot afford this! Last known balance is <p class=\"PriceRed\">{balance} SC</p>", "Error");
+            listingService.ModifySuspended(ListedItem, false);
             return;
         }
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </p>", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });

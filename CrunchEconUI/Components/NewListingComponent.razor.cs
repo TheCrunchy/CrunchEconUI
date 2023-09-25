@@ -3,6 +3,7 @@ using CrunchEconUI.Models;
 using CrunchEconUI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Radzen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace CrunchEconUI.Components
         public EventService eventService { get; set; }
 
         private ItemListing ListedItem = new ItemListing();
-
+        Variant variant = Variant.Filled;
         protected override async Task OnInitializedAsync()
         {
             definitionIds = eventService.GetAllIds().OrderByDescending(x => x).ToList();
