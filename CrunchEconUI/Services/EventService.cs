@@ -1,6 +1,7 @@
 ﻿using CrunchEconModels.Models.Events;
 using CrunchEconUI.Helpers;
 using Microsoft.AspNetCore.Http.Features;
+using Newtonsoft.Json;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,19 @@ namespace CrunchEconUI.Services
         public EventService(IWebHostEnvironment environment)
         {
             Environment = environment;
+            var path = @$"{this.Environment.WebRootPath}\Textures.Json";
+            if (File.Exists(path))
+            {
+                var text = File.ReadAllText(path);
+                Textures = JsonConvert.DeserializeObject<Dictionary<string, TextureEvent>>(text);
+            }
         }
-
+        public async Task SaveToJson()
+        {
+            var path = @$"{this.Environment.WebRootPath}\Textures.Json";
+            var textures = JsonConvert.SerializeObject(Textures, Formatting.Indented);
+            await File.WriteAllTextAsync(path, textures);
+        }
         public Dictionary<ulong, List<Event>> GetPlayersEvents(List<ulong> players)
         {
             var events = playersEvents.Where(x => players.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
@@ -74,7 +86,7 @@ namespace CrunchEconUI.Services
                     texture.TexturePath = texture.TexturePath.Replace(".dds", ".png");
                     File.Delete(path);
                 }
-
+                texture.Base64Texture = null;
                 Textures.Add(definition, texture);
             }
             catch (Exception)

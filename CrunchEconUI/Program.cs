@@ -30,6 +30,7 @@ internal class Program
         builder.Services.AddSingleton<PlayerBalanceAndNotifyService>();
         builder.Services.AddSingleton<ValidatedUserService>();
         builder.Services.AddSingleton<EventService>();
+        builder.Services.AddLogging();
         builder.Services.AddScoped<AuthenticatedUserService>();
         builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>

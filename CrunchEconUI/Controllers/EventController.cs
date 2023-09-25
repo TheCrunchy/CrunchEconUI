@@ -20,12 +20,14 @@ namespace CrunchEconUI.Controllers
     {
         private EventService eventService { get; set; }
         private IListingsService listingService { get; set; }
+        private ILogger<EventController> logger { get; set; }
         private PlayerBalanceAndNotifyService balanceService { get; set; }
-        public EventController(EventService events, PlayerBalanceAndNotifyService balances, IListingsService listservice)
+        public EventController(EventService events, PlayerBalanceAndNotifyService balances, IListingsService listservice, ILogger<EventController> logger)
         {
             this.eventService = events;
             this.balanceService = balances;
             this.listingService = listservice;
+            this.logger = logger;
         }
 
         [HttpPost]
@@ -51,6 +53,7 @@ namespace CrunchEconUI.Controllers
                 return Unauthorized("API KEY IS NOT VALID");
             }
             var eventMessage = JsonConvert.DeserializeObject<Event>(message.JsonMessage.ToString());
+            logger.Log(LogLevel.Information, $"Processing event : {eventMessage.JsonEvent}");
             await ProcessEvent(eventMessage);
             return Ok();
         }
@@ -68,6 +71,7 @@ namespace CrunchEconUI.Controllers
             var eventMessages = JsonConvert.DeserializeObject<List<Event>>(message.JsonMessage.ToString());
             foreach (var eventMessage in eventMessages)
             {
+                logger.Log(LogLevel.Information, $"Processing event : {eventMessage.JsonEvent}");
                 await ProcessEvent(eventMessage);
             }
 
@@ -77,6 +81,11 @@ namespace CrunchEconUI.Controllers
         {
             switch (eventMessage.EventType)
             {
+                case EventType.SaveTexturesJson:
+                    {
+                        await eventService.SaveToJson();
+                        break;
+                    }
                 case EventType.DeleteListing:
                     {
                         var result = JsonConvert.DeserializeObject<DeleteListingEvent>(eventMessage.JsonEvent);

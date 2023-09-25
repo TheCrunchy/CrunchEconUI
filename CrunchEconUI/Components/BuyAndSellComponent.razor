@@ -107,7 +107,7 @@
         var refundMessage = new StringBuilder();
         if (ListedItem.IsBuying && ListedItem.MaxAmountToBuy > 0)
         {
-            refundMessage.AppendLine($"Total Refund for listing {ListedItem.MaxAmountToBuy:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} <br><p class=\"PriceGreen\">{(ListedItem.MaxAmountToBuy * ListedItem.SellPricePerItem):n0} SC</ p > <br>");
+            refundMessage.AppendLine($"Total Refund for listing {ListedItem.MaxAmountToBuy:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} <br><p class=\"PriceGreen\">{(ListedItem.MaxAmountToBuy * ListedItem.SellPricePerItem):n0} SC</p> <br>");
         }
         if (ListedItem.IsSelling && ListedItem.Amount > 0)
         {
@@ -147,7 +147,7 @@
             Amount = buyableAmount;
         }
 
-        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} < br >< p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
+        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} <br><p class=\"PriceGreen\">{(Amount * ListedItem.SellPricePerItem):n0} SC</p>", "Confirmation", new ConfirmOptions() { OkButtonText = $"Sell", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
             var buy = new BuyItemEvent();
@@ -199,7 +199,7 @@
             await DialogService.Alert($"You cannot afford this! Last known balance is <p class=\"PriceRed\">{balance} SC</p>", "Error");
             return;
         }
-        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} < br > < p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </ p >", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
+        var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </p>", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
         if (confirmed != null && confirmed.Value)
         {
             var buy = new BuyItemEvent();

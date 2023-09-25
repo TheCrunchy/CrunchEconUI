@@ -16,6 +16,7 @@ namespace CrunchEconModels.Models
         BuyItem,
         SellItem,
         TextureEvent,
-        DeleteListing
+        DeleteListing,
+        SaveTexturesJson
     }
 }
