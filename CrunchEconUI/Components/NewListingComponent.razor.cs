@@ -62,7 +62,7 @@ namespace CrunchEconUI.Components
             var create = new CreateListingEvent();
             create.Listing = ListedItem;
             create.OriginatingPlayerSteamId = ListedItem.OwnerId;
-            final.EventType = EventType.DeleteListing;
+            final.EventType = EventType.ListItem;
             final.JsonEvent = JsonConvert.SerializeObject(create);
 
             eventService.AddEvent(User.UserInfo.SteamId, final);
