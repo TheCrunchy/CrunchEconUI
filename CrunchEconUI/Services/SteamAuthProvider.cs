@@ -21,7 +21,6 @@ namespace CrunchEconUI.Services
                 new Claim(ClaimTypes.Name, userInfo.Name),
                 new Claim(ClaimTypes.NameIdentifier, userInfo.Id.ToString()),
                 new Claim("SteamId", userInfo.SteamId.ToString()),
-                new Claim(ClaimTypes.Role, userInfo.Role)
             };
         }
 

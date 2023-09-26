@@ -15,6 +15,6 @@ namespace CrunchEconUI.Services
 
         public bool IsAuthenticated => UserInfo != null;
         public int UserId => UserInfo?.Id ?? 0;
-        public bool IsAdmin => UserInfo?.Role?.Equals(RoleConstants.AdminRoleId) ?? false;
+        public bool IsAdmin => UserInfo?.Role >= 5;
     }
 }

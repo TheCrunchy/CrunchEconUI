@@ -17,8 +17,8 @@ namespace CrunchEconUI.Components
         [Inject] IListingsService listingService { get; set; }
         List<ItemListing> Items = new();
         public DataGrid<ItemListing> GridRef { get; set; }
-        [Parameter]
-        public UserInfo? User { get; set; }
+        [CascadingParameter]
+        public AuthenticatedUserService User { get; set; }
         private string Bound = "Sell Price Low to High";
 
         IEnumerable<string> Sorting = new List<string>()
@@ -86,7 +86,7 @@ namespace CrunchEconUI.Components
         public async Task CreateListing()
         {
             var ListedItem = new ItemListing();
-            ListedItem.OwnerId = User.SteamId;
+            ListedItem.OwnerId = User.UserInfo.SteamId;
           
                 await DialogService.OpenAsync<NewListingComponent>($"New Listing",
                        new Dictionary<string, object>() { { "User", User } },

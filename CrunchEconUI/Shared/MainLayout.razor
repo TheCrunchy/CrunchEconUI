@@ -11,11 +11,11 @@
     </div> *@
 
     <main>
-        @if (UserService.UserInfo != null)
-        {
+
             <div class="container-fluid">
+                <CascadingValue Value="@UserService">
                 <RadzenCard>
-                    <AvatarComponent User="UserService.UserInfo" />
+                    <AvatarComponent/>
 
                 </RadzenCard>
 
@@ -23,35 +23,24 @@
                 <RadzenTabs RenderMode="TabRenderMode.Client">
                     <Tabs>
                         <RadzenTabsItem Text="Player Listings">
-                            <PlayerListingsComponent User="UserService.UserInfo"></PlayerListingsComponent>
+                            <PlayerListingsComponent></PlayerListingsComponent>
                         </RadzenTabsItem>
                         <RadzenTabsItem Text="NPC Listings">
-                            <PlayerListingsComponent User="UserService.UserInfo"></PlayerListingsComponent>
+                            <PlayerListingsComponent></PlayerListingsComponent>
                         </RadzenTabsItem>
                         <RadzenTabsItem Text="Contracts">
-                            <PlayerListingsComponent User="UserService.UserInfo"></PlayerListingsComponent>
+                            <PlayerListingsComponent></PlayerListingsComponent>
                         </RadzenTabsItem>
                         <RadzenTabsItem Text="Ships">
-                            <PlayerListingsComponent User="UserService.UserInfo"></PlayerListingsComponent>
+                            <PlayerListingsComponent></PlayerListingsComponent>
                         </RadzenTabsItem>
                     </Tabs>
                 </RadzenTabs>
 
-
+                </CascadingValue>
             </div>
 
-        }
-
-
-        @if (UserService.UserInfo == null)
-        {
-            <H3>You must login to continue</H3>
-            <CrunchEconUI.Components.LoginButton></CrunchEconUI.Components.LoginButton>
-        }
-        else
-        {
-            @Body
-        }
+        
     </main>
 </div>
 

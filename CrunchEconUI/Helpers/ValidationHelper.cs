@@ -47,7 +47,7 @@ namespace CrunchEconUI.Helpers
             {
                 SteamId = playerSummary.SteamId,
                 Name = playerSummary.Nickname,
-                Role = RoleConstants.DefaultRoleId,
+                Role = 0,
                 AvatarUrl = playerSummary.AvatarFullUrl,
 
             };
@@ -94,7 +94,7 @@ namespace CrunchEconUI.Helpers
             {
                 SteamId = playerSummary.SteamId,
                 Name = playerSummary.Nickname,
-                Role = RoleConstants.DefaultRoleId,
+                Role = 0,
                 AvatarUrl = playerSummary.AvatarFullUrl,
             };
             validated.StoreData(auth.UserInfo);

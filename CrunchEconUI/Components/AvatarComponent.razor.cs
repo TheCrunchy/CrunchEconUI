@@ -8,8 +8,8 @@ namespace CrunchEconUI.Components
 {
     public partial class AvatarComponent : IAsyncDisposable
     {
-        [Parameter]
-        public UserInfo? User { get; set; }
+        [CascadingParameter]
+        public AuthenticatedUserService User { get; set; }
         [Inject]
         public PlayerBalanceAndNotifyService BalanceService { get; set; }
 
@@ -27,14 +27,14 @@ namespace CrunchEconUI.Components
 
         public async void RefreshBalance(ulong steamId)
         {
-            if (User?.SteamId == steamId) {
+            if (User.UserInfo?.SteamId == steamId) {
                 await InvokeAsync(StateHasChanged);
             }
         }
 
         public async void Notify(ulong steamId, string notification)
         {
-            if (User?.SteamId == steamId)
+            if (User.UserInfo?.SteamId == steamId)
             {
                 await DialogService.Alert($"{notification}", "Notification", new ConfirmOptions() { OkButtonText = $"Close"});
             }

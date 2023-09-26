@@ -19,8 +19,8 @@
 
             <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell Disabled=@(!ListedItem.IsBuying) />
 
-            <RadzenButton Text="Withdraw" ButtonStyle="ButtonStyle.Success" Icon="account_balance_wallet" Click="@ClickWithdraw" Disabled=@(ListedItem.OwnerId != User.SteamId)></RadzenButton>
-            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete" Disabled=@(ListedItem.OwnerId != User.SteamId)></RadzenButton>
+            <RadzenButton Text="Withdraw" ButtonStyle="ButtonStyle.Success" Icon="account_balance_wallet" Click="@ClickWithdraw" Disabled=@(ListedItem.OwnerId != User.UserInfo?.SteamId)></RadzenButton>
+            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete" Disabled=@(ListedItem.OwnerId != User.UserInfo?.SteamId)></RadzenButton>
 
         </RadzenStack>
     </div>
@@ -28,8 +28,8 @@
 </div>
 
 @code {
-    [Parameter]
-    public UserInfo? User { get; set; }
+    [CascadingParameter]
+    public AuthenticatedUserService User { get; set; }
     public int Amount { get; set; }
     [Parameter]
     public ItemListing ListedItem { get; set; }
@@ -74,9 +74,9 @@
             buy.SellerSteamId = ListedItem.OwnerId;
             buy.Price = 0;
             buy.Amount = Amount;
-            buy.BuyerSteamId = User.SteamId;
+            buy.BuyerSteamId = User.UserInfo.SteamId;
             buy.DefinitionIdString = $"{ListedItem.ItemId}";
-            buy.OriginatingPlayerSteamId = User.SteamId;
+            buy.OriginatingPlayerSteamId = User.UserInfo.SteamId;
             buy.RaisedAt = DateTime.Now;
             buy.IsAdminSale = true;
 
@@ -85,7 +85,7 @@
             final.EventType = EventType.BuyItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
 
-            eventService.AddEvent(User.SteamId, final);
+            eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         else
         {
@@ -122,7 +122,7 @@
             del.OriginatingPlayerSteamId = ListedItem.OwnerId;
             final.EventType = EventType.DeleteListing;
             final.JsonEvent = JsonConvert.SerializeObject(del);
-            eventService.AddEvent(User.SteamId, final);
+            eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         else
         {
@@ -155,9 +155,9 @@
             buy.SellerSteamId = ListedItem.OwnerId;
             buy.Price = Amount * ListedItem.SellPricePerItem;
             buy.Amount = Amount;
-            buy.BuyerSteamId = User.SteamId;
+            buy.BuyerSteamId = User.UserInfo.SteamId;
             buy.DefinitionIdString = $"{ListedItem.ItemId}";
-            buy.OriginatingPlayerSteamId = User.SteamId;
+            buy.OriginatingPlayerSteamId = User.UserInfo.SteamId;
             buy.RaisedAt = DateTime.Now;
             buy.IsAdminSale = true;
 
@@ -166,7 +166,7 @@
             final.EventType = EventType.SellItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
 
-            eventService.AddEvent(User.SteamId, final);
+            eventService.AddEvent(User.UserInfo.SteamId, final);
 
 
         }
@@ -193,7 +193,7 @@
         {
             Amount = ListedItem.Amount;
         }
-        var balance = BalanceService.GetBalance(User.SteamId);
+        var balance = BalanceService.GetBalance(User.UserInfo.SteamId);
         if (balance < Amount * ListedItem.BuyPricePerItem)
         {
             await DialogService.Alert($"You cannot afford this! Last known balance is <p class=\"PriceRed\">{balance} SC</p>", "Error");
@@ -208,9 +208,9 @@
             buy.SellerSteamId = ListedItem.OwnerId;
             buy.Price = Amount * ListedItem.BuyPricePerItem;
             buy.Amount = Amount;
-            buy.BuyerSteamId = User.SteamId;
+            buy.BuyerSteamId = User.UserInfo.SteamId;
             buy.DefinitionIdString = $"{ListedItem.ItemId}";
-            buy.OriginatingPlayerSteamId = User.SteamId;
+            buy.OriginatingPlayerSteamId = User.UserInfo.SteamId;
             buy.RaisedAt = DateTime.Now;
             buy.IsAdminSale = true;
 
@@ -219,7 +219,7 @@
             final.EventType = EventType.BuyItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
 
-            eventService.AddEvent(User.SteamId, final);
+            eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         else
         {

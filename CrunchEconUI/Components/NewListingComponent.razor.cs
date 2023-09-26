@@ -15,8 +15,8 @@ namespace CrunchEconUI.Components
 {
     public partial class NewListingComponent
     {
-        [Parameter]
-        public UserInfo? User { get; set; }
+        [CascadingParameter]
+        public AuthenticatedUserService User { get; set; }
 
         private List<String> definitionIds = new List<String>();
 
@@ -28,7 +28,7 @@ namespace CrunchEconUI.Components
         protected override async Task OnInitializedAsync()
         {
             definitionIds = eventService.GetAllIds().OrderByDescending(x => x).ToList();
-            ListedItem.OwnerId = User.SteamId;
+            ListedItem.OwnerId = User.UserInfo.SteamId;
             ListedItem.Suspended = true;
             ListedItem.SellPricePerItem = 1;
             ListedItem.BuyPricePerItem = 1;

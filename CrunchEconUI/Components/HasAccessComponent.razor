@@ -1,0 +1,7 @@
+﻿@if(User.UserInfo != null)
+{
+    @if (User.UserInfo.Role >= AccessLevel)
+    {
+        @ChildContent
+    }
+}

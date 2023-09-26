@@ -58,7 +58,9 @@
                   
                 </DeleteCommandTemplate>
                 <EditCommandTemplate>
-                    <BuyAndSellComponent ListedItem="@context.Item" User="User"></BuyAndSellComponent>
+                   <HasAccessComponent AccessLevel="0">
+                    <BuyAndSellComponent ListedItem="@context.Item"></BuyAndSellComponent>
+                    </HasAccessComponent>
                 </EditCommandTemplate>
             </DataGridCommandColumn>
         </ChildContent>
