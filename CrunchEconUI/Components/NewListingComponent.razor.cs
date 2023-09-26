@@ -45,6 +45,11 @@ namespace CrunchEconUI.Components
         {
             ListedItem.IsSelling = ListedItem.Amount > 0;
             ListedItem.IsBuying = ListedItem.MaxAmountToBuy > 0;
+            if (!ListedItem.IsBuying && !ListedItem.IsSelling)
+            {
+                await DialogService.Alert($"You must buy or sell at least 1 item.", "Error");
+                return;
+            }
             if (ListedItem.IsAdminListing)
             {
                 service.StoreItem(ListedItem);
