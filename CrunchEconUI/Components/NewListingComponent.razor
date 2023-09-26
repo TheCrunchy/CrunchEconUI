@@ -8,6 +8,12 @@
             <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString())) />
 
             <RadzenDropDown @bind-Value="ListedItem.ItemId" AllowClear="true" Placeholder="Select an ItemId" Data="@definitionIds" Style="width: 100%;"></RadzenDropDown>
+            <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="Radzen.JustifyContent.Start" Gap="2rem" Class="rz-p-2">
+            <HasAccessComponent AccessLevel="5">
+                    <RadzenCheckBox @bind-Value=@ListedItem.IsAdminListing Name="Is Admin Sale" />
+                    <RadzenLabel Text="Admin Sale" Component="Is Admin Sale" Style="margin-left: 8px; vertical-align: middle;" />
+            </HasAccessComponent>
+            </RadzenStack>
         </RadzenStack>
         <RadzenStack>
             <RadzenImage Path="@eventService.GetTexture(@ListedItem.ItemId)" Style="width: 200px; height: 200px;" />
@@ -22,6 +28,7 @@
                 <NumericPicker @bind-Value="@ListedItem.BuyPricePerItem" Min="1" Max=@Int32.MaxValue> </NumericPicker>
                 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Amount to Sell</RadzenText>
                 <NumericPicker @bind-Value="@ListedItem.Amount" Min="0" Max=@Int32.MaxValue> </NumericPicker>
+
             </RadzenTabsItem>
             <RadzenTabsItem Text="Buy From Players">
                 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Buy Price</RadzenText>
@@ -31,17 +38,8 @@
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>
-    <RadzenStack Orientation="Radzen.Orientation.Vertical" JustifyContent="Radzen.JustifyContent.Start" Gap="2rem" Class="rz-p-2">
 
-        <HasAccessComponent AccessLevel="5">
-            <div class="rz-p-12 rz-text-align-center">
-                <RadzenCheckBox @bind-Value=@ListedItem.IsAdminListing Name="Is Admin Sale" />
-                <RadzenLabel Text="Admin Sale" Component="Is Admin Sale" Style="margin-left: 8px; vertical-align: middle;" />
-            </div>
-        </HasAccessComponent>
-        <div class="rz-p-12 rz-text-align-center">
-            <RadzenButton ButtonType="Radzen.ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Save" Click="@Submit" />
-        </div>
 
-    </RadzenStack>
+        <RadzenButton ButtonType="Radzen.ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Save" Click="@Submit" />
+
 </CascadingValue>
