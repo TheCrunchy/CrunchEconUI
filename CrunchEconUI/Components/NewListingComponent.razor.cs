@@ -1,8 +1,10 @@
 ﻿using CrunchEconModels.Models;
+using CrunchEconModels.Models.Events;
 using CrunchEconUI.Models;
 using CrunchEconUI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Newtonsoft.Json;
 using Radzen;
 using System;
 using System.Collections.Generic;
@@ -47,7 +49,18 @@ namespace CrunchEconUI.Components
             {
                 service.StoreItem(ListedItem);
                 service.ModifySuspended(ListedItem, false);
+                DialogService.Close(); 
+                return;
             }
+
+            var final = new Event();
+            var create = new CreateListingEvent();
+            create.Listing = ListedItem;
+            create.OriginatingPlayerSteamId = ListedItem.OwnerId;
+            final.EventType = EventType.DeleteListing;
+            final.JsonEvent = JsonConvert.SerializeObject(create);
+
+            eventService.AddEvent(User.UserInfo.SteamId, final);
 
             DialogService.Close();
         }
