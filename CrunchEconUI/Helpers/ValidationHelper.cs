@@ -90,11 +90,16 @@ namespace CrunchEconUI.Helpers
                 logger.LogError(e, "An exception occurated when downloading player summaries");
                 return;
             }
+            int rank = 0;
+            if (Program.Admins.Contains(playerSummary.SteamId))
+            {
+                rank = 5;
+            }
             auth.UserInfo = new UserInfo()
             {
                 SteamId = playerSummary.SteamId,
                 Name = playerSummary.Nickname,
-                Role = 0,
+                Role = rank,
                 AvatarUrl = playerSummary.AvatarFullUrl,
             };
             validated.StoreData(auth.UserInfo);

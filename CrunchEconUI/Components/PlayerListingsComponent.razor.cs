@@ -19,6 +19,10 @@ namespace CrunchEconUI.Components
         public DataGrid<ItemListing> GridRef { get; set; }
         [CascadingParameter]
         public AuthenticatedUserService User { get; set; }
+
+        [Inject]
+        private ILogger<PlayerListingsComponent> _Logger { get; set; }
+
         private string Bound = "Sell Price Low to High";
 
         IEnumerable<string> Sorting = new List<string>()
@@ -66,6 +70,7 @@ namespace CrunchEconUI.Components
             listingService.RefreshListings += Reload;
             Items = await listingService.GetListings();
             Items = Items.Where(x => !x.Suspended).OrderBy(x => x.SellPricePerItem).ToList();
+            _Logger.LogInformation("FUCK");
             return;
         }
 

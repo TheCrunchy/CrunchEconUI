@@ -38,10 +38,9 @@
                 </DisplayTemplate>
             </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Price to Buy" Filterable="false" Editable="false">   </DataGridColumn>
-
+            <DataGridColumn TItem="ItemListing" Field="Amount" Caption="Buyable Amount" Editable="false" Filterable="false" Sortable="true">   </DataGridColumn>
             <DataGridColumn TItem="ItemListing" Field="SellPricePerItem" Caption="Price to Sell" Filterable="false" Editable="false">    </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="Amount" Caption="Amount" Editable="false" Filterable="false" Sortable="true">   </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="MaxAmountToBuy" Caption="Buying up to" Filterable="false" Editable="false">   </DataGridColumn>
+            <DataGridColumn TItem="ItemListing" Field="MaxAmountToBuy" Caption="Sellable Amount" Filterable="false" Editable="false">   </DataGridColumn>
             @*       <DataGridColumn TItem="ItemListing" Field="OwnerId" Caption="Owner" Editable="false">   </DataGridColumn>*@
             <DataGridCommandColumn TItem="ItemListing" DeleteCommandAllowed="true">
                 <CancelCommandTemplate>

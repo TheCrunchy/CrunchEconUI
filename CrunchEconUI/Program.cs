@@ -10,10 +10,16 @@ using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using Radzen;
+using Serilog.Extensions.Logging;
+using Serilog;
+using System.Reflection;
+using AutoMapper.Features;
+using Newtonsoft.Json;
 
 internal class Program
 {
     public static string APIKEY = "";
+    public static List<ulong> Admins = new List<ulong>();
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +36,10 @@ internal class Program
         builder.Services.AddSingleton<PlayerBalanceAndNotifyService>();
         builder.Services.AddSingleton<ValidatedUserService>();
         builder.Services.AddSingleton<EventService>();
-        builder.Services.AddLogging();
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
+
+        builder.Logging.SetMinimumLevel(LogLevel.Information);
         builder.Services.AddScoped<AuthenticatedUserService>();
         builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -68,7 +77,18 @@ internal class Program
         app.UseStaticFiles();
 
         app.UseRouting();
+        var path = @$"{app.Environment.WebRootPath}\Admins.Json";
+        if (!File.Exists(path))
+        {
+            var admins = JsonConvert.SerializeObject(new List<ulong>() { 76561198045390854 }, Formatting.Indented);
+            File.WriteAllText(path, admins);
+        }
+        else {
+            var text = File.ReadAllText(path);
 
+            Admins = JsonConvert.DeserializeObject<List<ulong>>(text);
+        }
+      
         app.MapBlazorHub();
         app.MapFallbackToPage("/_Host");
         app.MapControllers();

@@ -22,7 +22,6 @@ namespace CrunchEconUI.Controllers
         [HttpGet("~/signin"), HttpPost("~/signin")]
         public IActionResult SignIn()
         {
-            Console.WriteLine("BOB");
             var challenge = Challenge(new AuthenticationProperties
             {
                 RedirectUri = "/index",
@@ -37,7 +36,6 @@ namespace CrunchEconUI.Controllers
         [HttpGet("~/signout"), HttpPost("~/signout")]
         public IActionResult LogOut()
         {
-            Console.WriteLine("BOB 2");
             return SignOut(new AuthenticationProperties
             {
                 RedirectUri = "/index",

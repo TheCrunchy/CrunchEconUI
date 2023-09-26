@@ -26,6 +26,9 @@ namespace CrunchEconUI.Components
 
         private ItemListing ListedItem = new ItemListing();
         Variant variant = Variant.Filled;
+
+        [Inject]
+        private IListingsService service { get; set; }
         protected override async Task OnInitializedAsync()
         {
             definitionIds = eventService.GetAllIds().OrderByDescending(x => x).ToList();
@@ -38,6 +41,14 @@ namespace CrunchEconUI.Components
 
         public async Task Submit()
         {
+            ListedItem.IsSelling = ListedItem.Amount > 0;
+            ListedItem.IsBuying = ListedItem.MaxAmountToBuy > 0;
+            if (ListedItem.IsAdminListing)
+            {
+                service.StoreItem(ListedItem);
+                service.ModifySuspended(ListedItem, false);
+            }
+
             DialogService.Close();
         }
 
