@@ -91,7 +91,8 @@ namespace CrunchEconUI.Components
                 await DialogService.OpenAsync<NewListingComponent>($"New Listing",
                        new Dictionary<string, object>() { { "User", User } },
                        new DialogOptions() { Width = "50%", Height = "70%", Resizable = true, Draggable = true });
-            
+
+       
         }
 
         public async ValueTask DisposeAsync()

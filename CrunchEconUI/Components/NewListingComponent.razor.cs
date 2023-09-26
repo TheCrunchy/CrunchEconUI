@@ -15,9 +15,10 @@ namespace CrunchEconUI.Components
 {
     public partial class NewListingComponent
     {
-        [CascadingParameter]
+        [Parameter]
         public AuthenticatedUserService User { get; set; }
-
+        [Inject]
+        DialogService DialogService { get; set; }
         private List<String> definitionIds = new List<String>();
 
         [Inject]
@@ -37,7 +38,7 @@ namespace CrunchEconUI.Components
 
         public async Task Submit()
         {
-
+            DialogService.Close();
         }
 
         public async Task OnChange(string search)
