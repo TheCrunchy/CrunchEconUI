@@ -60,6 +60,7 @@ namespace CrunchEconUI.Services
 
         public void RemoveEvent(ulong playerId, Guid eventId)
         {
+
             if (playersEvents.ContainsKey(playerId))
             {
                 var events = playersEvents[playerId];
@@ -69,6 +70,8 @@ namespace CrunchEconUI.Services
                     events.Remove(removing);
                 }
             }
+
+
         }
 
         public void AddTexture(string definition, TextureEvent texture)

@@ -10,6 +10,12 @@ namespace CrunchEconUI.Services
         private Dictionary<Guid, ItemListing> ListedItems = new Dictionary<Guid, ItemListing>();
 
         public Action<ItemListing>? RefreshListings { get; set; }
+        private EventService events { get; set; }
+
+        public IListingService(EventService events)
+        {
+            this.events = events;
+        }
 
         public Task ConfirmListingRequest(ulong steamId, ItemListing listing)
         {
@@ -21,6 +27,7 @@ namespace CrunchEconUI.Services
             if (ListedItems.TryGetValue(item.Id, out var listed))
             {
                 listed.Suspended = suspended;
+                listed.SuspendedUntil = DateTime.Now.AddMinutes(0.1);
                 ListedItems[item.Id] = listed;
 
                 RefreshListings?.Invoke(listed);
@@ -53,6 +60,24 @@ namespace CrunchEconUI.Services
         {
             if (ListedItems.Any())
             {
+                var deleteThese = new List<ItemListing>();
+                foreach (var item in ListedItems.Where(x => x.Value.SuspendedUntil.HasValue))
+                {
+                    if (DateTime.Now >= item.Value.SuspendedUntil)
+                    {
+                        deleteThese.Add(item.Value);
+                      
+                    }
+                }
+                foreach (var item in deleteThese)
+                {
+                    events.RemoveEvent(0l, item.EventId.Value);
+                    item.Suspended = false;
+                    item.EventId = null;
+                    item.SuspendedUntil = null;
+                    StoreItem(item);
+                    ModifySuspended(item, false);
+                }
                 return ListedItems.ToList().Select(x => x.Value).ToList();
             }
             ListedItems.Clear();

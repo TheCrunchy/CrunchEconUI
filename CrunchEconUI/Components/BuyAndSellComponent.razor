@@ -85,6 +85,11 @@
             final.EventType = EventType.BuyItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
 
+            ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
+            ListedItem.EventId = final.EventId;
+            ListedItem.BuyerId = buy.BuyerSteamId;
+            listingService.StoreItem(ListedItem);
+
             eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         else
@@ -122,6 +127,12 @@
             del.OriginatingPlayerSteamId = ListedItem.OwnerId;
             final.EventType = EventType.DeleteListing;
             final.JsonEvent = JsonConvert.SerializeObject(del);
+
+            ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
+            ListedItem.EventId = final.EventId;
+            ListedItem.BuyerId = del.OriginatingPlayerSteamId;
+            listingService.StoreItem(ListedItem);
+
             eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         else
@@ -165,6 +176,10 @@
 
             final.EventType = EventType.SellItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
+            ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
+            ListedItem.EventId = final.EventId;
+            ListedItem.BuyerId = buy.OriginatingPlayerSteamId;
+            listingService.StoreItem(ListedItem);
 
             eventService.AddEvent(User.UserInfo.SteamId, final);
 
@@ -215,6 +230,10 @@
             buy.IsAdminSale = true;
 
             var final = new Event();
+            ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
+            ListedItem.EventId = final.EventId;
+            ListedItem.BuyerId = buy.OriginatingPlayerSteamId;
+            listingService.StoreItem(ListedItem);
 
             final.EventType = EventType.BuyItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);

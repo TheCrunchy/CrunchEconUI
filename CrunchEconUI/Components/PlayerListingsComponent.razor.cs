@@ -58,9 +58,12 @@ namespace CrunchEconUI.Components
                     Items = Items.OrderByDescending(x => x.Amount).ToList();
                     break;
             }
-            await GridRef?.Reload();
-            await GridRef?.Refresh();
-
+            if (GridRef != null)
+            {
+                await GridRef?.Reload();
+                await GridRef?.Refresh();
+            }
+      
             await InvokeAsync(StateHasChanged);
             return;
         }
