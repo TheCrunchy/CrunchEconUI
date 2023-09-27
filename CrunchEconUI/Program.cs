@@ -15,11 +15,14 @@ using Serilog;
 using System.Reflection;
 using AutoMapper.Features;
 using Newtonsoft.Json;
+using CrunchEconUI.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 
 internal class Program
 {
     public static string APIKEY = "";
     public static List<ulong> Admins = new List<ulong>();
+    public static string DBString;
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -32,12 +35,15 @@ internal class Program
         APIKEY = builder.Configuration["ApiKey"];
         builder.Services.AddTransient(x => new SteamWebInterfaceFactory(builder.Configuration["Authentication:Steam:ClientSecret"]));
         builder.Services.AddScoped<AuthenticationStateProvider, SteamAuthProvider>();
-        builder.Services.AddSingleton<IListingsService, IListingService>();
+ 
         builder.Services.AddSingleton<PlayerBalanceAndNotifyService>();
         builder.Services.AddSingleton<ValidatedUserService>();
         builder.Services.AddSingleton<EventService>();
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
+        DBString = builder.Configuration["DBString"];
+        builder.Services.AddDbContext<EconContext>();
+        builder.Services.AddTransient<EconContext>();
 
         builder.Logging.SetMinimumLevel(LogLevel.Information);
         builder.Services.AddScoped<AuthenticatedUserService>();
@@ -61,6 +67,9 @@ internal class Program
           })
           .AddBootstrapProviders()
           .AddFontAwesomeIcons();
+
+        builder.Services.AddSingleton<IListingService>();
+
         var app = builder.Build();
         app.UseAuthentication();
         app.UseAuthorization();
@@ -83,12 +92,13 @@ internal class Program
             var admins = JsonConvert.SerializeObject(new List<ulong>() { 76561198045390854 }, Formatting.Indented);
             File.WriteAllText(path, admins);
         }
-        else {
+        else
+        {
             var text = File.ReadAllText(path);
 
             Admins = JsonConvert.DeserializeObject<List<ulong>>(text);
         }
-      
+
         app.MapBlazorHub();
         app.MapFallbackToPage("/_Host");
         app.MapControllers();

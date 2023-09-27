@@ -14,7 +14,7 @@ namespace CrunchEconUI.Components
         public EventService eventService { get; set; }
         [Inject]
          DialogService DialogService { get; set; }
-        [Inject] IListingsService listingService { get; set; }
+        [Inject] IListingService listingService { get; set; }
         List<ItemListing> Items = new();
         public DataGrid<ItemListing> GridRef { get; set; }
         [CascadingParameter]

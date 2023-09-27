@@ -19,10 +19,10 @@ namespace CrunchEconUI.Controllers
     public class EventController : ControllerBase
     {
         private EventService eventService { get; set; }
-        private IListingsService listingService { get; set; }
+        private IListingService listingService { get; set; }
         private ILogger<EventController> logger { get; set; }
         private PlayerBalanceAndNotifyService balanceService { get; set; }
-        public EventController(EventService events, PlayerBalanceAndNotifyService balances, IListingsService listservice, ILogger<EventController> logger)
+        public EventController(EventService events, PlayerBalanceAndNotifyService balances, IListingService listservice, ILogger<EventController> logger)
         {
             this.eventService = events;
             this.balanceService = balances;

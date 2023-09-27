@@ -30,7 +30,7 @@ namespace CrunchEconUI.Components
         Variant variant = Variant.Filled;
 
         [Inject]
-        private IListingsService service { get; set; }
+        private IListingService service { get; set; }
         protected override async Task OnInitializedAsync()
         {
             definitionIds = eventService.GetAllIds().OrderByDescending(x => x).ToList();

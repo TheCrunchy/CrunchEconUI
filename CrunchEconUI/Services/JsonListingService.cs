@@ -1,20 +1,32 @@
 ﻿using CrunchEconModels.Models;
+using CrunchEconUI.EntityFramework;
 using CrunchEconUI.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using SteamWebAPI2.Models;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace CrunchEconUI.Services
 {
-    public class IListingService : IListingsService
+    public class IListingService
     {
         private Dictionary<Guid, ItemListing> ListedItems = new Dictionary<Guid, ItemListing>();
 
         public Action<ItemListing>? RefreshListings { get; set; }
         private EventService events { get; set; }
+        private EconContext context { get; set; }
 
-        public IListingService(EventService events)
+        public IListingService(EventService events, EconContext factory)
         {
             this.events = events;
+            context = factory;
+
+            context.Database.EnsureCreated();
+            context.SaveChanges();
+            context.playeritemlistings.Add(new ItemListing());
+            context.SaveChanges();
+
         }
 
         public Task ConfirmListingRequest(ulong steamId, ItemListing listing)
@@ -66,7 +78,7 @@ namespace CrunchEconUI.Services
                     if (DateTime.Now >= item.Value.SuspendedUntil)
                     {
                         deleteThese.Add(item.Value);
-                      
+
                     }
                 }
                 foreach (var item in deleteThese)
@@ -126,7 +138,7 @@ namespace CrunchEconUI.Services
             for (int i = 0; i < 50; i++)
             {
                 Guid Id = Guid.NewGuid();
-                ListedItems.Add(Id, new ItemListing()
+                var listing = new ItemListing()
                 {
                     ItemId = "MyObjectBuilder_Ingot/Iron",
                     BuyPricePerItem = 50,
@@ -138,8 +150,13 @@ namespace CrunchEconUI.Services
                     MaxAmountToBuy = 100,
                     OwnerId = 76561198045390854,
                     Suspended = false
-                });
+                };
+                ListedItems.Add(Id, listing);
+                context.playeritemlistings.Add(listing);
             }
+
+
+            context.SaveChanges();
             return ListedItems.ToList().Select(x => x.Value).ToList();
         }
 
@@ -164,6 +181,7 @@ namespace CrunchEconUI.Services
 
         public async Task StoreItem(ItemListing listing)
         {
+
             if (ListedItems.ContainsKey(listing.Id))
             {
                 ListedItems[listing.Id] = listing;
