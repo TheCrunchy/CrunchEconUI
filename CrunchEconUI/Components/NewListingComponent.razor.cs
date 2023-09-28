@@ -38,11 +38,18 @@ namespace CrunchEconUI.Components
             ListedItem.Suspended = true;
             ListedItem.SellPricePerItem = 1;
             ListedItem.BuyPricePerItem = 1;
+           
             return;
         }
 
         public async Task Submit()
         {
+            if (string.IsNullOrWhiteSpace(ListedItem.ItemId))
+            {
+                await DialogService.Alert($"You must select an item.", "Error");
+                return;
+
+            }
             ListedItem.IsSelling = ListedItem.Amount > 0;
             ListedItem.IsBuying = ListedItem.MaxAmountToBuy > 0;
             if (!ListedItem.IsBuying && !ListedItem.IsSelling)

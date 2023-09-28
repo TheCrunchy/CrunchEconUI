@@ -15,17 +15,17 @@ namespace CrunchEconUI.Services
 
         public Action<ItemListing>? RefreshListings { get; set; }
         private EventService events { get; set; }
-        private EconContext context { get; set; }
+   //     private EconContext context { get; set; }
 
-        public IListingService(EventService events, EconContext factory)
+        public IListingService(EventService events)
         {
+            //, EconContext factory
             this.events = events;
-            context = factory;
+       //     context = factory;
 
-            context.Database.EnsureCreated();
-            context.SaveChanges();
-            context.playeritemlistings.Add(new ItemListing());
-            context.SaveChanges();
+        //    context.Database.EnsureCreated();
+        //  
+        //    context.SaveChanges();
 
         }
 
@@ -39,7 +39,10 @@ namespace CrunchEconUI.Services
             if (ListedItems.TryGetValue(item.Id, out var listed))
             {
                 listed.Suspended = suspended;
-                listed.SuspendedUntil = DateTime.Now.AddMinutes(0.1);
+                if (suspended) {
+                    listed.SuspendedUntil = DateTime.Now.AddMinutes(0.1);
+                }
+              
                 ListedItems[item.Id] = listed;
 
                 RefreshListings?.Invoke(listed);
@@ -73,7 +76,7 @@ namespace CrunchEconUI.Services
             if (ListedItems.Any())
             {
                 var deleteThese = new List<ItemListing>();
-                foreach (var item in ListedItems.Where(x => x.Value.SuspendedUntil.HasValue))
+                foreach (var item in ListedItems.Where(x => x.Value.SuspendedUntil.HasValue && x.Value.EventId.HasValue))
                 {
                     if (DateTime.Now >= item.Value.SuspendedUntil)
                     {
@@ -152,11 +155,11 @@ namespace CrunchEconUI.Services
                     Suspended = false
                 };
                 ListedItems.Add(Id, listing);
-                context.playeritemlistings.Add(listing);
+               // context.playeritemlistings.Add(listing);
             }
 
 
-            context.SaveChanges();
+          //  context.SaveChanges();
             return ListedItems.ToList().Select(x => x.Value).ToList();
         }
 

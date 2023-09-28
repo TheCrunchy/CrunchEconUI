@@ -42,8 +42,8 @@ internal class Program
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
         DBString = builder.Configuration["DBString"];
-        builder.Services.AddDbContext<EconContext>();
-        builder.Services.AddTransient<EconContext>();
+ //       builder.Services.AddDbContext<EconContext>();
+ //       builder.Services.AddTransient<EconContext>();
 
         builder.Logging.SetMinimumLevel(LogLevel.Information);
         builder.Services.AddScoped<AuthenticatedUserService>();
