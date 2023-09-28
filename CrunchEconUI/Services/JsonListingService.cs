@@ -15,18 +15,22 @@ namespace CrunchEconUI.Services
 
         public Action<ItemListing>? RefreshListings { get; set; }
         private EventService events { get; set; }
-   //     private EconContext context { get; set; }
+        private EconContext context { get; set; }
 
-        public IListingService(EventService events)
+        public IListingService(EventService events, EconContext factory)
         {
-            //, EconContext factory
+
             this.events = events;
-       //     context = factory;
+            context = factory;
 
-        //    context.Database.EnsureCreated();
-        //  
-        //    context.SaveChanges();
+            context.Database.EnsureCreated();
 
+            context.SaveChanges();
+
+            foreach (var item in context.playeritemlistings)
+            {
+                ListedItems.TryAdd(item.Id, item);
+            }
         }
 
         public Task ConfirmListingRequest(ulong steamId, ItemListing listing)
@@ -39,12 +43,14 @@ namespace CrunchEconUI.Services
             if (ListedItems.TryGetValue(item.Id, out var listed))
             {
                 listed.Suspended = suspended;
-                if (suspended) {
+                if (suspended)
+                {
                     listed.SuspendedUntil = DateTime.Now.AddMinutes(0.1);
                 }
-              
-                ListedItems[item.Id] = listed;
 
+                ListedItems[item.Id] = listed;
+                context.playeritemlistings.Update(listed);
+                context.SaveChanges();
                 RefreshListings?.Invoke(listed);
             }
         }
@@ -76,7 +82,7 @@ namespace CrunchEconUI.Services
             if (ListedItems.Any())
             {
                 var deleteThese = new List<ItemListing>();
-                foreach (var item in ListedItems.Where(x => x.Value.SuspendedUntil.HasValue && x.Value.EventId.HasValue))
+                foreach (var item in ListedItems.Where(x => x.Value.SuspendedUntil.HasValue))
                 {
                     if (DateTime.Now >= item.Value.SuspendedUntil)
                     {
@@ -86,7 +92,11 @@ namespace CrunchEconUI.Services
                 }
                 foreach (var item in deleteThese)
                 {
-                    events.RemoveEvent(0l, item.EventId.Value);
+                    if (item.EventId.HasValue)
+                    {
+                        events.RemoveEvent(0l, item.EventId.Value);
+                    }
+
                     item.Suspended = false;
                     item.EventId = null;
                     item.SuspendedUntil = null;
@@ -95,23 +105,23 @@ namespace CrunchEconUI.Services
                 }
                 return ListedItems.ToList().Select(x => x.Value).ToList();
             }
-            ListedItems.Clear();
-            var Id1 = Guid.NewGuid();
-            var Id2 = Guid.NewGuid();
-            var Id3 = Guid.NewGuid();
-            ListedItems.Add(Id1, new ItemListing()
-            {
-                ItemId = "MyObjectBuilder_Ingot/Iron",
-                BuyPricePerItem = 50,
-                SellPricePerItem = 5,
-                Id = Id1,
-                IsBuying = true,
-                IsSelling = true,
-                Amount = 50,
-                MaxAmountToBuy = 100,
-                OwnerId = 76561198045390854,
-                Suspended = false,
-            });
+            //ListedItems.Clear();
+            //var Id1 = Guid.NewGuid();
+            //var Id2 = Guid.NewGuid();
+            //var Id3 = Guid.NewGuid();
+            //ListedItems.Add(Id1, new ItemListing()
+            //{
+            //    ItemId = "MyObjectBuilder_Ingot/Iron",
+            //    BuyPricePerItem = 50,
+            //    SellPricePerItem = 5,
+            //    Id = Id1,
+            //    IsBuying = true,
+            //    IsSelling = true,
+            //    Amount = 50,
+            //    MaxAmountToBuy = 100,
+            //    OwnerId = 76561198045390854,
+            //    Suspended = false,
+            //});
             //ListedItems.Add(Id2, new ItemListing()
             //{
             //    ItemId = "MyObjectBuilder_Component/PlasmaCredit",
@@ -138,28 +148,28 @@ namespace CrunchEconUI.Services
             //    OwnerId = 76561198045390854,
             //    Suspended = false
             //});
-            for (int i = 0; i < 50; i++)
-            {
-                Guid Id = Guid.NewGuid();
-                var listing = new ItemListing()
-                {
-                    ItemId = "MyObjectBuilder_Ingot/Iron",
-                    BuyPricePerItem = 50,
-                    SellPricePerItem = 75,
-                    Id = Id,
-                    IsBuying = false,
-                    IsSelling = true,
-                    Amount = 50,
-                    MaxAmountToBuy = 100,
-                    OwnerId = 76561198045390854,
-                    Suspended = false
-                };
-                ListedItems.Add(Id, listing);
-               // context.playeritemlistings.Add(listing);
-            }
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    Guid Id = Guid.NewGuid();
+            //    var listing = new ItemListing()
+            //    {
+            //        ItemId = "MyObjectBuilder_Ingot/Iron",
+            //        BuyPricePerItem = 50,
+            //        SellPricePerItem = 75,
+            //        Id = Id,
+            //        IsBuying = false,
+            //        IsSelling = true,
+            //        Amount = 50,
+            //        MaxAmountToBuy = 100,
+            //        OwnerId = 76561198045390854,
+            //        Suspended = false
+            //    };
+            //    ListedItems.Add(Id, listing);
+            //    context.playeritemlistings.Add(listing);
+            //}
 
 
-          //  context.SaveChanges();
+            // context.SaveChanges();
             return ListedItems.ToList().Select(x => x.Value).ToList();
         }
 
@@ -188,10 +198,14 @@ namespace CrunchEconUI.Services
             if (ListedItems.ContainsKey(listing.Id))
             {
                 ListedItems[listing.Id] = listing;
+                context.playeritemlistings.Update(listing);
                 return;
             }
+
             ListedItems.Add(listing.Id, listing);
 
+            context.playeritemlistings.Add(listing);
+            context.SaveChanges();
             RefreshListings?.Invoke(listing);
         }
     }

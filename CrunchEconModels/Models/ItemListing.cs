@@ -3,7 +3,7 @@ namespace CrunchEconModels.Models
 {
     public class ItemListing
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();  
         public string ItemId { get; set; }
         public string ItemIdImage { get; set; }
         public long SellPricePerItem { get; set; }

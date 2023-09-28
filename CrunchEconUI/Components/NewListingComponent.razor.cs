@@ -38,7 +38,7 @@ namespace CrunchEconUI.Components
             ListedItem.Suspended = true;
             ListedItem.SellPricePerItem = 1;
             ListedItem.BuyPricePerItem = 1;
-           
+            ListedItem.Id = Guid.NewGuid();
             return;
         }
 
@@ -59,8 +59,8 @@ namespace CrunchEconUI.Components
             }
             if (ListedItem.IsAdminListing)
             {
-                service.StoreItem(ListedItem);
-                service.ModifySuspended(ListedItem, false);
+                await service.StoreItem(ListedItem);
+                await service.ModifySuspended(ListedItem, false);
                 DialogService.Close(); 
                 return;
             }
