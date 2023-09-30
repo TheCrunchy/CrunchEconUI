@@ -15,9 +15,9 @@
     <div class="rz-p-6 rz-text-align-center">
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="Radzen.FlexWrap.Wrap">
 
-            <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy Disabled=@(!ListedItem.IsSelling) />
+            <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy Disabled=@(!ListedItem.IsSelling || ListedItem.Amount <= 0) />
 
-            <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell Disabled=@(!ListedItem.IsBuying) />
+            <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell Disabled=@(!ListedItem.IsBuying || ListedItem.MaxAmountToBuy <= 0) />
 
             <RadzenButton Text="Withdraw" ButtonStyle="ButtonStyle.Success" Icon="account_balance_wallet" Click="@ClickWithdraw" Disabled=@(ListedItem.OwnerId != User.UserInfo?.SteamId)></RadzenButton>
             <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete" Disabled=@(ListedItem.OwnerId != User.UserInfo?.SteamId)></RadzenButton>
@@ -59,7 +59,7 @@
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
         }
-        listingService.ModifySuspended(ListedItem, true);
+        await listingService.ModifySuspended(ListedItem, true);
 
         if (Amount > ListedItem.Amount)
         {
@@ -88,13 +88,13 @@
             ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
             ListedItem.EventId = final.EventId;
             ListedItem.BuyerId = buy.BuyerSteamId;
-            listingService.StoreItem(ListedItem);
+            await listingService.StoreItem(ListedItem);
 
             eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         else
         {
-            listingService.ModifySuspended(ListedItem, false);
+            await listingService.ModifySuspended(ListedItem, false);
 
         }
     }
@@ -108,7 +108,7 @@
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
         }
-        listingService.ModifySuspended(ListedItem, true);
+        await listingService.ModifySuspended(ListedItem, true);
         var refundMessage = new StringBuilder();
         if (ListedItem.IsBuying && ListedItem.MaxAmountToBuy > 0)
         {
@@ -131,13 +131,13 @@
             ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
             ListedItem.EventId = final.EventId;
             ListedItem.BuyerId = del.OriginatingPlayerSteamId;
-            listingService.StoreItem(ListedItem);
+            await listingService.StoreItem(ListedItem);
 
             eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         else
         {
-            listingService.ModifySuspended(ListedItem, false);
+            await listingService.ModifySuspended(ListedItem, false);
         }
     }
 
@@ -150,7 +150,7 @@
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
         }
-        listingService.ModifySuspended(ListedItem, true);
+        await listingService.ModifySuspended(ListedItem, true);
 
         var buyableAmount = ListedItem.MaxAmountToBuy;
         if (buyableAmount < Amount)
@@ -179,7 +179,7 @@
             ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
             ListedItem.EventId = final.EventId;
             ListedItem.BuyerId = buy.OriginatingPlayerSteamId;
-            listingService.StoreItem(ListedItem);
+            await listingService.StoreItem(ListedItem);
 
             eventService.AddEvent(User.UserInfo.SteamId, final);
 
@@ -187,7 +187,7 @@
         }
         else
         {
-            listingService.ModifySuspended(ListedItem, false);
+            await listingService.ModifySuspended(ListedItem, false);
 
         }
         return;
@@ -202,7 +202,7 @@
             await DialogService.Alert($"Selected item is currently suspended, try again later.", "Error");
             return;
         }
-        listingService.ModifySuspended(ListedItem, true);
+        await listingService.ModifySuspended(ListedItem, true);
 
         if (Amount > ListedItem.Amount)
         {
@@ -212,7 +212,7 @@
         if (balance < Amount * ListedItem.BuyPricePerItem)
         {
             await DialogService.Alert($"You cannot afford this! Last known balance is <p class=\"PriceRed\">{balance} SC</p>", "Error");
-            listingService.ModifySuspended(ListedItem, false);
+            await listingService.ModifySuspended(ListedItem, false);
             return;
         }
         var confirmed = await DialogService.Confirm($"Total Price for {Amount:n0} of {ListedItem.ItemId.Replace("MyObjectBuilder_", "")} <br> <p class=\"PriceRed\">{(Amount * ListedItem.BuyPricePerItem):n0}SC </p>", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
@@ -233,7 +233,7 @@
             ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
             ListedItem.EventId = final.EventId;
             ListedItem.BuyerId = buy.OriginatingPlayerSteamId;
-            listingService.StoreItem(ListedItem);
+            await listingService.StoreItem(ListedItem);
 
             final.EventType = EventType.BuyItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
@@ -242,7 +242,7 @@
         }
         else
         {
-            listingService.ModifySuspended(ListedItem, false);
+            await listingService.ModifySuspended(ListedItem, false);
 
         }
 

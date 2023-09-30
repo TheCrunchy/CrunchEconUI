@@ -9,6 +9,7 @@ namespace CrunchEconUI.EntityFramework
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             options.UseNpgsql(Program.DBString);
+            
         }
 
         public EconContext()

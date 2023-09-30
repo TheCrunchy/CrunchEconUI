@@ -27,6 +27,7 @@ namespace CrunchEconUI.Components
 
         IEnumerable<string> Sorting = new List<string>()
         {
+            "My Listings",
             "Sell Price Low to High",
             "Sell Price High to Low",
             "Buy Price Low to High",
@@ -37,6 +38,7 @@ namespace CrunchEconUI.Components
 
         public async Task Changed()
         {
+            Items = await listingService.GetListings();
             switch (Bound)
             {
                 case "Sell Price Low to High":
@@ -57,6 +59,12 @@ namespace CrunchEconUI.Components
                 case "Amount High to Low":
                     Items = Items.OrderByDescending(x => x.Amount).ToList();
                     break;
+                case "My Listings":
+                    if (User != null && User.UserInfo != null)
+                    {
+                        Items = Items.Where(x => x.OwnerId == User.UserInfo.SteamId).ToList();
+                    }
+                    break;
             }
             if (GridRef != null)
             {
@@ -73,7 +81,6 @@ namespace CrunchEconUI.Components
             listingService.RefreshListings += Reload;
             Items = await listingService.GetListings();
             Items = Items.Where(x => !x.Suspended).OrderBy(x => x.SellPricePerItem).ToList();
-            _Logger.LogInformation("FUCK");
             return;
         }
 

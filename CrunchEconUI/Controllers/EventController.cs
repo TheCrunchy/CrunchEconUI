@@ -86,14 +86,35 @@ namespace CrunchEconUI.Controllers
                         await eventService.SaveToJson();
                         break;
                     }
+                case EventType.ListItemResult:
+                    {
+   
+                        var result = JsonConvert.DeserializeObject<CreateListingEvent>(eventMessage.JsonEvent);
+                        if (result.Result == EventResult.Success)
+                        {
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
+                            await listingService.StoreItem(result.Listing);
+                            await listingService.ModifySuspended(result.Listing, false);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully created listing for {result.Listing.ItemId.Replace("MyObjectBuilder_", "")}");
+                        }
+                        else
+                        {
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to create Listing, reason <p class=\"PriceRed\">{result.Result}</p>");
+                            var item = result.Listing;
+                            item.Suspended = false;
+                            item.Deleted = false;
+                            await listingService.ModifySuspended(item, false);
+                        }
+                        break;
+                    }
                 case EventType.DeleteListing:
                     {
                         var result = JsonConvert.DeserializeObject<DeleteListingEvent>(eventMessage.JsonEvent);
                         if (result.Result == EventResult.Success)
                         {
                             eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
-                            listingService.DeleteListing(result.Listing);
-                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully deleted {result.Listing.Amount} of {result.Listing.ItemId.Replace("MyObjectBuilder_","")}");
+                            await listingService.DeleteListing(result.Listing);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully deleted {result.Listing.Amount} of {result.Listing.ItemId.Replace("MyObjectBuilder_", "")}");
                         }
                         else
                         {
@@ -179,25 +200,6 @@ namespace CrunchEconUI.Controllers
                         }
                         break;
                     }
-                case EventType.ListItemResult:
-                    {
-                        var result = JsonConvert.DeserializeObject<BuyItemEvent>(eventMessage.JsonEvent);
-                        if (result.Result == EventResult.Success)
-                        {
-                            var item = await listingService.GetUpdatedItem(result.ListedItemId);
-                            await listingService.ModifySuspended(item, false);
-                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
-                        }
-                        else
-                        {
-                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
-                            var item = await listingService.GetUpdatedItem(result.ListedItemId);
-                            await listingService.RemoveListingRequest(result.OriginatingPlayerSteamId, item);
-                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.EventId);
-                        }
-                        break;
-                    }
-                    break;
                 default:
                     break;
             }

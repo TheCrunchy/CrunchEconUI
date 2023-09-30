@@ -60,7 +60,8 @@ namespace CrunchEconUI.Services
             {
                 listed.Deleted = true;
                 ListedItems.Remove(listed.Id);
-
+                context.playeritemlistings.Remove(listed);
+                context.SaveChanges();
                 RefreshListings?.Invoke(listed);
             }
         }
