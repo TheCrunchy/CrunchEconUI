@@ -1,3 +1,54 @@
-﻿<div>
+﻿@using CrunchEconModels.Models.Upgrades;
+<div>
 
+    @if (Upgrades.GetAssembler().Any())
+    {
+        <h2>Assembler Speeds</h2>
+        <DataGrid TItem="Upgrade"
+                  Data="@Upgrades.GetAssembler()"
+                  EditMode="Blazorise.DataGrid.DataGridEditMode.Popup"
+                  SelectionMode="Blazorise.DataGrid.DataGridSelectionMode.Single"
+                  ShowPager="true"
+                  ShowPageSizes="true"
+                  Editable="true"
+                  Responsive="true"
+                  Sortable="true"
+                  Striped="true"
+                  PageSize="25"
+                  CommandMode="DataGridCommandMode.Commands"
+                  SubmitFormOnEnter="false"
+                  Filterable="true" PopupSize="Blazorise.ModalSize.ExtraLarge" @ref=@GridRefAssembler>
+            <ChildContent>
+                <DataGridColumn TItem="Upgrade" Field="UpgradeNumber" Caption="Number" Filterable="false" Editable="false">
+                </DataGridColumn>
+                <DataGridColumn TItem="Upgrade" Field="UpgradeName" Caption="Name" Editable="false">
+                </DataGridColumn>
+                <DataGridColumn TItem="Upgrade" Field="UpgradeDescription" Caption="Description" Filterable="false" Editable="false">   </DataGridColumn>
+              
+                @*       <DataGridColumn TItem="ItemListing" Field="OwnerId" Caption="Owner" Editable="false">   </DataGridColumn>*@
+                <DataGridCommandColumn TItem="Upgrade" DeleteCommandAllowed="false" >
+                    <CancelCommandTemplate>
+                    </CancelCommandTemplate>
+                    <SaveCommandTemplate>
+                    </SaveCommandTemplate>
+                    <ClearFilterCommandTemplate>
+                    
+                    </ClearFilterCommandTemplate>
+                    <DeleteCommandTemplate>
+
+                    </DeleteCommandTemplate>
+                    <EditCommandTemplate>
+                        <HasAccessComponent AccessLevel="0">
+
+                        </HasAccessComponent>
+                    </EditCommandTemplate>
+                </DataGridCommandColumn>
+            </ChildContent>
+        </DataGrid>
+    }
+    grid of upgrades 
+
+filter by type 
+
+show each % improvement, disable the button if they have it 
 </div>

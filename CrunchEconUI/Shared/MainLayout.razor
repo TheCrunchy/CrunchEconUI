@@ -6,16 +6,16 @@
 <RadzenNotification />
 <PageTitle>CrunchEconUI</PageTitle>
 <div class="page">
-@*     <div class="sidebar">
-        <NavMenu />
+    @*     <div class="sidebar">
+    <NavMenu />
     </div> *@
 
     <main>
 
-            <div class="container-fluid">
-                <CascadingValue Value="@UserService">
+        <div class="container-fluid">
+            <CascadingValue Value="@UserService">
                 <RadzenCard>
-                    <AvatarComponent/>
+                    <AvatarComponent />
 
                 </RadzenCard>
 
@@ -25,25 +25,28 @@
                         <RadzenTabsItem Text="Player Listings">
                             <PlayerListingsComponent></PlayerListingsComponent>
                         </RadzenTabsItem>
-                       @*  <RadzenTabsItem Text="NPC Listings">
-                            <PlayerListingsComponent></PlayerListingsComponent>
+
+                        <RadzenTabsItem Text="Production Upgrades">
+                            <ProductionUpgradesSection></ProductionUpgradesSection>
+                        </RadzenTabsItem>
+
+                        @*  <RadzenTabsItem Text="NPC Listings">
+                        <PlayerListingsComponent></PlayerListingsComponent>
                         </RadzenTabsItem>
                         <RadzenTabsItem Text="Contracts">
-                            <PlayerListingsComponent></PlayerListingsComponent>
+                        <PlayerListingsComponent></PlayerListingsComponent>
                         </RadzenTabsItem>
                         <RadzenTabsItem Text="Ships">
-                            <PlayerListingsComponent></PlayerListingsComponent>
-                        </RadzenTabsItem>
-                        <RadzenTabsItem Text="Production Upgrades">
                         <PlayerListingsComponent></PlayerListingsComponent>
-                        </RadzenTabsItem>*@
+                        </RadzenTabsItem>
+                        *@
                     </Tabs>
                 </RadzenTabs>
 
-                </CascadingValue>
-            </div>
+            </CascadingValue>
+        </div>
 
-        
+
     </main>
 </div>
 

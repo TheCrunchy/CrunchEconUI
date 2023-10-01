@@ -39,9 +39,10 @@ internal class Program
         builder.Services.AddSingleton<PlayerBalanceAndNotifyService>();
         builder.Services.AddSingleton<ValidatedUserService>();
         builder.Services.AddSingleton<EventService>();
+        builder.Services.AddSingleton<ProductionUpgradeService>();
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
-        DBString = builder.Configuration["DBString"];
+        DBString = builder.Configuration["DBString2"];
         builder.Services.AddDbContext<EconContext>();
         builder.Services.AddTransient<EconContext>();
 
