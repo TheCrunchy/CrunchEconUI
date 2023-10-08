@@ -1,4 +1,5 @@
 ﻿using CrunchEconModels.Models;
+using CrunchEconModels.Models.Events;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 
@@ -18,6 +19,7 @@ namespace CrunchEconUI.EntityFramework
         }
 
         public DbSet<ItemListing> playeritemlistings { get; set; }
+        public DbSet<Event> ArchivedEvents { get; set; }
         
     }
 }

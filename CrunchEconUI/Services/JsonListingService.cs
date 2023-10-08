@@ -1,4 +1,5 @@
 ﻿using CrunchEconModels.Models;
+using CrunchEconModels.Models.Events;
 using CrunchEconUI.EntityFramework;
 using CrunchEconUI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -172,6 +173,12 @@ namespace CrunchEconUI.Services
 
             // context.SaveChanges();
             return ListedItems.ToList().Select(x => x.Value).ToList();
+        }
+
+        public async Task ArchiveEvent(Event ev)
+        {
+            context.ArchivedEvents.Add(ev);
+            await context.SaveChangesAsync();
         }
 
         public Task<List<ItemListing>> GetUsersOwnListings(ulong steamId)

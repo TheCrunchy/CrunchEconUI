@@ -10,7 +10,7 @@ namespace CrunchEconModels.Models.Events
     {
         public EventType EventType { get; set; }
         public string JsonEvent { get; set; }
-        public Guid EventId = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime ExpiredAt { get; set; } = DateTime.Now.AddSeconds(30);
     }
 }

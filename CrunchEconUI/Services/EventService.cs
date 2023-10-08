@@ -64,7 +64,7 @@ namespace CrunchEconUI.Services
             if (playersEvents.ContainsKey(playerId))
             {
                 var events = playersEvents[playerId];
-                var removing = events.FirstOrDefault(x => x.EventId == eventId);
+                var removing = events.FirstOrDefault(x => x.Id == eventId);
                 if (removing != null)
                 {
                     events.Remove(removing);

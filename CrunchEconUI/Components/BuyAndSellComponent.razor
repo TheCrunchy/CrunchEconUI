@@ -86,7 +86,7 @@
             final.JsonEvent = JsonConvert.SerializeObject(buy);
 
             ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
-            ListedItem.EventId = final.EventId;
+            ListedItem.EventId = final.Id;
             ListedItem.BuyerId = buy.BuyerSteamId;
             await listingService.StoreItem(ListedItem);
 
@@ -129,7 +129,7 @@
             final.JsonEvent = JsonConvert.SerializeObject(del);
 
             ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
-            ListedItem.EventId = final.EventId;
+            ListedItem.EventId = final.Id;
             ListedItem.BuyerId = del.OriginatingPlayerSteamId;
             await listingService.StoreItem(ListedItem);
 
@@ -177,7 +177,7 @@
             final.EventType = EventType.SellItem;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
             ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
-            ListedItem.EventId = final.EventId;
+            ListedItem.EventId = final.Id;
             ListedItem.BuyerId = buy.OriginatingPlayerSteamId;
             await listingService.StoreItem(ListedItem);
 
@@ -231,7 +231,7 @@
 
             var final = new Event();
             ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
-            ListedItem.EventId = final.EventId;
+            ListedItem.EventId = final.Id;
             ListedItem.BuyerId = buy.OriginatingPlayerSteamId;
             await listingService.StoreItem(ListedItem);
 
