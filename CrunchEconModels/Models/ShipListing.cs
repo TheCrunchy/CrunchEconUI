@@ -12,11 +12,15 @@ namespace CrunchEconModels.Models
         public string ShipPrefabName { get; set; }
         public string Description { get; set; }
         public string ShipName { get; set; }
-        public long Price { get; set; }
+        public long Price { get; set; } = 1;
         public bool RequireReputation { get; set; } = false;
         public string FactionTag { get; set; }
         public int ReputationRequirement { get; set; } = 0;
         public string ImagePath { get; set; }
         public List<String> ImageUrls { get; set; }
+
+        public bool Deleted { get; set; }
+
+        public Guid Id { get; set; } = Guid.NewGuid();
     }
 }

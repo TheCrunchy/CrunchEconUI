@@ -10,8 +10,8 @@
 <div class="container-fluid">
 
 
-    <DataGrid TItem="ItemListing"
-              Data="@Items.Where(x => !x.Suspended)"
+    <DataGrid TItem="ShipListing"
+              Data="@Items"
               EditMode="Blazorise.DataGrid.DataGridEditMode.Popup"
               SelectionMode="Blazorise.DataGrid.DataGridSelectionMode.Single"
               ShowPager="true"
@@ -25,29 +25,24 @@
               SubmitFormOnEnter="false"
               Filterable="true" PopupSize="Blazorise.ModalSize.ExtraLarge" @ref=@GridRef>
         <ChildContent>
-            <DataGridColumn TItem="ItemListing" Field="ItemIdImage" Caption="" Filterable="false" Editable="false">
+            <DataGridColumn TItem="ShipListing" Field="ImagePath" Caption="Icon" Filterable="false" Editable="false">
                 <DisplayTemplate>
-                    <RadzenImage Path="@eventService.GetTexture(@context.ItemId)" Style="max-width: 100px; max-height: 100px;" />
+                    <RadzenImage Path="@context.ImagePath" Style="max-width: 300px; max-height: 300px;" />
                 </DisplayTemplate>
             </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="ItemId" Caption="Item" Editable="false">
-                <DisplayTemplate>
-                    <p>@context.ItemId.Replace("MyObjectBuilder_","")</p>
-                </DisplayTemplate>
-            </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="BuyPricePerItem" Caption="Price to Buy" Filterable="false" Editable="false">   </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="Amount" Caption="Buyable Amount" Editable="false" Filterable="false" Sortable="true">   </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="SellPricePerItem" Caption="Price to Sell" Filterable="false" Editable="false">    </DataGridColumn>
-            <DataGridColumn TItem="ItemListing" Field="MaxAmountToBuy" Caption="Sellable Amount" Filterable="false" Editable="false">   </DataGridColumn>
+            <DataGridColumn TItem="ShipListing" Field="ShipName" Caption="Ship Name" Editable="false"/>
+            <DataGridColumn TItem="ShipListing" Field="Description" Caption="Description" Editable="false" />
+
+            <DataGridColumn TItem="ShipListing" Field="Price" Caption="Price to Buy" Filterable="false" Editable="false">   </DataGridColumn>
             @*       <DataGridColumn TItem="ItemListing" Field="OwnerId" Caption="Owner" Editable="false">   </DataGridColumn>*@
-            <DataGridCommandColumn TItem="ItemListing" DeleteCommandAllowed="true" NewCommandAllowed="false">
+            <DataGridCommandColumn TItem="ShipListing" DeleteCommandAllowed="true" NewCommandAllowed="false">
                 <CancelCommandTemplate>
                     @*                  <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="cancel" Click="@(args => context.Clicked.InvokeAsync())"></RadzenButton> *@
                 </CancelCommandTemplate>
                 <SaveCommandTemplate>
                 </SaveCommandTemplate>
                 <ClearFilterCommandTemplate>
-                    <HasAccessComponent AccessLevel="5">
+                    <HasAccessComponent AccessLevel="0">
                         <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Success" Text="Create Listing" Click="@CreateListing" />
                     </HasAccessComponent>
                     <RadzenDropDown TValue="string" @bind-Value=@Bound Data=@Sorting Change="@Changed" Style="width: 100%; max-width: 400px;" />
@@ -58,7 +53,7 @@
                 </DeleteCommandTemplate>
                 <EditCommandTemplate>
                     <HasAccessComponent AccessLevel="0">
-                        <BuyAndSellComponent ListedItem="@context.Item"></BuyAndSellComponent>
+                     <p>test</p>
                     </HasAccessComponent>
                 </EditCommandTemplate>
             </DataGridCommandColumn>

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using CrunchEconModels.Models;
+using CrunchEconUI.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Rendering;
+using Radzen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +14,10 @@ namespace CrunchEconUI.Components
 {
     public partial class NewShipListingComponent
     {
+        [Parameter]
+        public AuthenticatedUserService User { get; set; }
+        [Inject]
+        DialogService DialogService { get; set; }
         private long maxFileSize = 1024 * 6000;
 
         [Inject]
@@ -19,7 +26,13 @@ namespace CrunchEconUI.Components
         public String SelectedFilePath;
         public List<String> AdditionalImages = new List<String>();
 
-        private async Task LoadFiles(InputFileChangeEventArgs e)
+        private ShipListing NewListing = new ShipListing();
+
+        public async Task Submit()
+        {
+
+        }
+            private async Task LoadFiles(InputFileChangeEventArgs e)
         {
             foreach (var file in e.GetMultipleFiles(1))
             {

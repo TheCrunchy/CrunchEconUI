@@ -15,6 +15,7 @@ namespace CrunchEconUI.Services
         private Dictionary<Guid, ItemListing> ListedItems = new Dictionary<Guid, ItemListing>();
 
         public Action<ItemListing>? RefreshListings { get; set; }
+        public Action<ShipListing>? RefreshShipListings { get; set; }
         private EventService events { get; set; }
         private EconContext context { get; set; }
 
@@ -79,7 +80,12 @@ namespace CrunchEconUI.Services
             throw new NotImplementedException();
         }
 
-        public async Task<List<ItemListing>> GetListings()
+        public async Task<List<ShipListing>> GetShipListings()
+        {
+            return new List<ShipListing>();
+        }
+
+            public async Task<List<ItemListing>> GetListings()
         {
             if (ListedItems.Any())
             {

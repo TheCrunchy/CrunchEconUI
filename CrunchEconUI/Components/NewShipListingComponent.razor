@@ -1,21 +1,56 @@
 ﻿
-<RadzenStack Orientation="Radzen.Orientation.Vertical" Style="width: 70%;">
-
-    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Image uploads, png, jpg, jpeg</RadzenText>
-    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Main Icon</RadzenText>
-    <RadzenImage Path="@SelectedFilePath" Style="max-width: 300px; max-height: 300px;" />
-
-    <InputFile OnChange="@LoadFiles" accept=".png,.jpg,.jpeg" multiple />
-    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Additional</RadzenText>
-
-
-    <InputFile OnChange="@LoadFilesAdditional" accept=".png,.jpg,.jpeg" multiple />
+<RadzenStack Orientation="Radzen.Orientation.Vertical" Gap="3px">
     <RadzenStack Orientation="Radzen.Orientation.Horizontal">
+        <RadzenStack>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">Ship Name</RadzenText>
+            <RadzenTextBox @bind-value="@NewListing.ShipName" />
+        </RadzenStack>
+        <RadzenStack>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">Prefab File Name</RadzenText>
+            <RadzenTextBox @bind-value="@NewListing.ShipPrefabName" />
+        </RadzenStack>
+
+        <RadzenStack>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Price</RadzenText>
+            <NumericPicker @bind-Value="@NewListing.Price" Min="1" Max=@Int32.MaxValue> </NumericPicker>
+        </RadzenStack>
+    </RadzenStack>
+
+    <RadzenStack>
+        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">Description</RadzenText>
+        <RadzenTextArea @bind-value="@NewListing.Description" />
+    </RadzenStack>
+    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Image uploads, png, jpg, jpeg</RadzenText>
+
+    <RadzenStack Orientation="Radzen.Orientation.Horizontal">
+        <RadzenStack>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Main Icon</RadzenText>
+     
+                <InputFile OnChange="@LoadFiles" accept=".png,.jpg,.jpeg" />
+   
+  
+        </RadzenStack>
+
+        <RadzenImage Path="@SelectedFilePath" Style="max-width: 300px; max-height: 300px;" />
+    </RadzenStack>
+
+
+
+    <RadzenStack Orientation="Radzen.Orientation.Horizontal">
+        <RadzenStack>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">Additional</RadzenText>
+           
+            <InputFile OnChange="@LoadFilesAdditional" accept=".png,.jpg,.jpeg" multiple/>
+          
+     
+        </RadzenStack>
         @foreach (var item in AdditionalImages)
         {
             <RadzenImage Path="@item" Style="max-width: 200px; max-height: 200px;" />
 
         }
     </RadzenStack>
+
+    <RadzenButton ButtonType="Radzen.ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Save" Click="@Submit" Style="width: 20%;" />
 
 </RadzenStack>
