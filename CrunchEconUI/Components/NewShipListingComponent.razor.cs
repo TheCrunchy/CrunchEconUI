@@ -11,25 +11,20 @@ namespace CrunchEconUI.Components
 {
     public partial class NewShipListingComponent
     {
-        private List<IBrowserFile> loadedFiles = new();
         private long maxFileSize = 1024 * 6000;
 
         [Inject]
         public IWebHostEnvironment Environment { get; set; }
 
         public String SelectedFilePath;
-
+        public List<String> AdditionalImages = new List<String>();
 
         private async Task LoadFiles(InputFileChangeEventArgs e)
         {
-
-            loadedFiles.Clear();
-
             foreach (var file in e.GetMultipleFiles(1))
             {
                 try
                 {
-                    loadedFiles.Add(file);
 
                     var trustedFileNameForFileStorage = file.Name;
                     var path = Path.Combine(Environment.WebRootPath, "Textures/Ships/",
@@ -46,7 +41,28 @@ namespace CrunchEconUI.Components
                 }
             }
         }
+        private async Task LoadFilesAdditional(InputFileChangeEventArgs e)
+        {
+            foreach (var file in e.GetMultipleFiles())
+            {
+                try
+                {
+                    var trustedFileNameForFileStorage = file.Name;
+                    var path = Path.Combine(Environment.WebRootPath, "Textures/Ships/",
+                            trustedFileNameForFileStorage);
 
+                    await using FileStream fs = new(path, FileMode.Create);
+                    await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                    AdditionalImages.Add($"Textures/Ships/{file.Name}");
+
+                }
+                catch (Exception ex)
+                {
+                    return;
+                }
+            }
+            await InvokeAsync(StateHasChanged);
+        }
     }
 }
 
