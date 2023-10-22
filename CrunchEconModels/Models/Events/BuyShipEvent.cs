@@ -10,5 +10,6 @@ namespace CrunchEconModels.Models.Events
     {
         public ulong OriginatingPlayerSteamId { get; set; }
         public ShipListing ShipListing { get; set; }
+        public EventResult Result { get; set; }
     }
 }

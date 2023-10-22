@@ -17,5 +17,8 @@ namespace CrunchEconModels.Models
         ItemIdDoesntExist,
         NotOnline,
         NotEnoughReputation,
+        PrefabDoesntExist,
+        CouldntPasteGrid,
+        FactionNotFound,
     }
 }

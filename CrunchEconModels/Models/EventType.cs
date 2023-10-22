@@ -19,6 +19,7 @@ namespace CrunchEconModels.Models
         TextureEvent,
         DeleteListing,
         SaveTexturesJson,
+        BuyShipResult,
         PrefabEvent,
     }
 }

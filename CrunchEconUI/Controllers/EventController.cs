@@ -86,6 +86,31 @@ namespace CrunchEconUI.Controllers
                         await eventService.SaveToJson();
                         break;
                     }
+
+                case EventType.PrefabEvent:
+                    {
+                        var result = JsonConvert.DeserializeObject<PrefabEvent>(eventMessage.JsonEvent);
+                        listingService.SetPrefabs(result.Prefabs);
+                        break;
+                    }
+                case EventType.BuyShipResult:
+                    {
+                        var result = JsonConvert.DeserializeObject<BuyShipEvent>(eventMessage.JsonEvent);
+                        if (result.Result == EventResult.Success)
+                        {
+                           
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully bought {result.ShipListing.ShipName}");
+                        }
+                        else
+                        {
+                            eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                            balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to buy {result.ShipListing.ShipName}, reason <p class=\"PriceRed\">{result.Result}</p>");
+                        }
+                        await listingService.ArchiveEvent(eventMessage);
+                        break;
+                    }
+
                 case EventType.ListItemResult:
                     {
    

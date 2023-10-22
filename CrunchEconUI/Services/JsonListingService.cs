@@ -23,12 +23,6 @@ namespace CrunchEconUI.Services
 
         public List<String> GetPrefabs()
         {
-            return new List<string>()
-            {
-                "Ship 1",
-                "Ship 2",
-                "Ship 3"
-            };
             return Prefabs;
         }
         public void SetPrefabs(List<String> prefabs)
