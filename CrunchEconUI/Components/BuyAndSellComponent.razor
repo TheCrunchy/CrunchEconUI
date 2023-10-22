@@ -21,7 +21,9 @@
 
             <RadzenButton Text="Withdraw" ButtonStyle="ButtonStyle.Success" Icon="account_balance_wallet" Click="@ClickWithdraw" Disabled=@(ListedItem.OwnerId != User.UserInfo?.SteamId)></RadzenButton>
             <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete" Disabled=@(ListedItem.OwnerId != User.UserInfo?.SteamId)></RadzenButton>
-
+            <HasAccessComponent AccessLevel="5">
+                <RadzenButton Text="Admin Delete" ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete"></RadzenButton>
+            </HasAccessComponent>
         </RadzenStack>
     </div>
     @*     </RadzenCard> *@

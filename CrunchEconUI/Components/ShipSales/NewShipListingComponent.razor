@@ -7,12 +7,23 @@
         </RadzenStack>
         <RadzenStack>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">Prefab File Name</RadzenText>
-            <RadzenTextBox @bind-value="@NewListing.ShipPrefabName" />
+            <RadzenDropDown TValue="string" @bind-Value=@NewListing.ShipPrefabName Data="@service.GetPrefabs()" Style="width: 100%; max-width: 400px;" />
+
         </RadzenStack>
 
         <RadzenStack>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Price</RadzenText>
             <NumericPicker @bind-Value="@NewListing.Price" Min="1" Max=@Int32.MaxValue> </NumericPicker>
+        </RadzenStack>
+
+        <RadzenStack>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Reputation Required</RadzenText>
+            <NumericPicker @bind-Value="@NewListing.ReputationRequirement" Min="-1500" Max=1500> </NumericPicker>
+        </RadzenStack>
+
+        <RadzenStack>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">Faction Tags, seperated by ,</RadzenText>
+            <RadzenTextBox @bind-value="@NewListing.FactionTag" />
         </RadzenStack>
     </RadzenStack>
 
@@ -20,6 +31,7 @@
         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">Description</RadzenText>
         <RadzenTextArea @bind-value="@NewListing.Description" />
     </RadzenStack>
+
     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Image uploads, png, jpg, jpeg</RadzenText>
 
     <RadzenStack Orientation="Radzen.Orientation.Horizontal">

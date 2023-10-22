@@ -19,6 +19,23 @@ namespace CrunchEconUI.Services
         private EventService events { get; set; }
         private EconContext context { get; set; }
 
+        private List<string> Prefabs { get; set; } = new();
+
+        public List<String> GetPrefabs()
+        {
+            return new List<string>()
+            {
+                "Ship 1",
+                "Ship 2",
+                "Ship 3"
+            };
+            return Prefabs;
+        }
+        public void SetPrefabs(List<String> prefabs)
+        {
+            Prefabs = prefabs;
+        }
+
         public IListingService(EventService events, EconContext factory)
         {
 
@@ -33,11 +50,6 @@ namespace CrunchEconUI.Services
             {
                 ListedItems.TryAdd(item.Id, item);
             }
-        }
-
-        public Task ConfirmListingRequest(ulong steamId, ItemListing listing)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task ModifySuspended(ItemListing item, bool suspended = true)
@@ -75,14 +87,10 @@ namespace CrunchEconUI.Services
             }
             return true;
         }
-        public Task CreateListingRequest(ulong steamId, ItemListing listing)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<List<ShipListing>> GetShipListings()
         {
-            return new List<ShipListing>();
+            return context.shiplistings.Where(x => !x.Deleted).ToList();
         }
 
             public async Task<List<ItemListing>> GetListings()
@@ -113,71 +121,7 @@ namespace CrunchEconUI.Services
                 }
                 return ListedItems.ToList().Select(x => x.Value).ToList();
             }
-            //ListedItems.Clear();
-            //var Id1 = Guid.NewGuid();
-            //var Id2 = Guid.NewGuid();
-            //var Id3 = Guid.NewGuid();
-            //ListedItems.Add(Id1, new ItemListing()
-            //{
-            //    ItemId = "MyObjectBuilder_Ingot/Iron",
-            //    BuyPricePerItem = 50,
-            //    SellPricePerItem = 5,
-            //    Id = Id1,
-            //    IsBuying = true,
-            //    IsSelling = true,
-            //    Amount = 50,
-            //    MaxAmountToBuy = 100,
-            //    OwnerId = 76561198045390854,
-            //    Suspended = false,
-            //});
-            //ListedItems.Add(Id2, new ItemListing()
-            //{
-            //    ItemId = "MyObjectBuilder_Component/PlasmaCredit",
-            //    BuyPricePerItem = 55,
-            //    SellPricePerItem = 7,
-            //    Id = Id2,
-            //    IsBuying = true,
-            //    IsSelling = true,
-            //    Amount = 50,
-            //    MaxAmountToBuy = 100,
-            //    OwnerId = 76561198045390854,
-            //    Suspended = false,
-            //});
-            //ListedItems.Add(Id3, new ItemListing()
-            //{
-            //    ItemId = "MyObjectBuilder_Ingot/Gold",
-            //    BuyPricePerItem = 500,
-            //    SellPricePerItem = 3,
-            //    Id = Id3,
-            //    IsBuying = false,
-            //    IsSelling = true,
-            //    Amount = 50,
-            //    MaxAmountToBuy = 100,
-            //    OwnerId = 76561198045390854,
-            //    Suspended = false
-            //});
-            //for (int i = 0; i < 50; i++)
-            //{
-            //    Guid Id = Guid.NewGuid();
-            //    var listing = new ItemListing()
-            //    {
-            //        ItemId = "MyObjectBuilder_Ingot/Iron",
-            //        BuyPricePerItem = 50,
-            //        SellPricePerItem = 75,
-            //        Id = Id,
-            //        IsBuying = false,
-            //        IsSelling = true,
-            //        Amount = 50,
-            //        MaxAmountToBuy = 100,
-            //        OwnerId = 76561198045390854,
-            //        Suspended = false
-            //    };
-            //    ListedItems.Add(Id, listing);
-            //    context.playeritemlistings.Add(listing);
-            //}
 
-
-            // context.SaveChanges();
             return ListedItems.ToList().Select(x => x.Value).ToList();
         }
 
@@ -187,14 +131,19 @@ namespace CrunchEconUI.Services
             await context.SaveChangesAsync();
         }
 
-        public Task<List<ItemListing>> GetUsersOwnListings(ulong steamId)
+        public async Task StoreShip(ShipListing listing)
         {
-            throw new NotImplementedException();
+            context.shiplistings.Add(listing);
+            context.SaveChanges();
+            RefreshShipListings?.Invoke(listing);
         }
 
-        public Task RemoveListingRequest(ulong steamId, ItemListing listing)
+        public async Task DeleteShip(ShipListing listing)
         {
-            throw new NotImplementedException();
+            listing.Deleted = true;
+            context.shiplistings.Update(listing);
+            context.SaveChanges();
+            RefreshShipListings?.Invoke(listing);
         }
 
         public async Task<ItemListing> GetUpdatedItem(Guid itemId)

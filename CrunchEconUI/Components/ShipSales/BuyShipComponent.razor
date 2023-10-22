@@ -1,0 +1,101 @@
+﻿@using CrunchEconModels.Models
+@using CrunchEconModels.Models.Events;
+@using CrunchEconUI.Models
+@inject DialogService DialogService
+@using CrunchEconUI.Services
+@using Newtonsoft.Json;
+@using Radzen
+@using Radzen.Blazor
+@using System.Text;
+
+<div>
+    @*     <RadzenCard> *@
+    <div class="rz-p-6 rz-text-align-center">
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="Radzen.FlexWrap.Wrap">
+
+            <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy/>
+            @if (ListedItem.ImageUrls.Any())
+            {
+                <RadzenButton Text="Images" ButtonStyle="ButtonStyle.Secondary" Click=@ClickImages />
+            }
+            <HasAccessComponent AccessLevel="1">
+            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete"></RadzenButton>
+            </HasAccessComponent>
+
+        </RadzenStack>
+    </div>
+    @*     </RadzenCard> *@
+</div>
+
+@code {
+    [CascadingParameter]
+    public AuthenticatedUserService User { get; set; }
+    public int Amount { get; set; } = 1;
+    [Parameter]
+    public ShipListing ListedItem { get; set; }
+    [Inject]
+    IListingService listingService { get; set; }
+
+    [Inject]
+    public PlayerBalanceAndNotifyService BalanceService { get; set; }
+    [Inject]
+    public EventService eventService { get; set; }
+
+    public async Task OpenOrder()
+    {
+    }
+
+    public async Task<bool> IsSuspended()
+    {
+        return await listingService.IsSuspended(ListedItem.Id);
+    }
+
+
+    public async Task ClickDelete()
+    {
+        var refundMessage = "Ship Listing Deleted";
+        var confirmed = await DialogService.Confirm($"Confirm Deleting {ListedItem.ShipName}", "Confirmation", new ConfirmOptions() { OkButtonText = $"Delete Ship", CancelButtonText = "Cancel" });
+        if (confirmed != null && confirmed.Value)
+        {
+            await listingService.DeleteShip(ListedItem);
+            await DialogService.Alert(refundMessage.ToString(), "Delete Successful");
+        }
+    }
+    public async Task ClickImages()
+    {
+        await DialogService.OpenAsync<ShipImagesComponent>($"Images",
+       new Dictionary<string, object>() { { "ListedItem", ListedItem } },
+       new DialogOptions() { Width = "80%", Height = "80%", Resizable = true, Draggable = true });
+    }
+
+    public async Task ClickBuy()
+    {
+        var balance = BalanceService.GetBalance(User.UserInfo.SteamId);
+        if (balance < Amount * ListedItem.Price)
+        {
+            await DialogService.Alert($"You cannot afford this! Last known balance is <p class=\"PriceRed\">{balance} SC</p>", "Error");
+            return;
+        }
+        var confirmed = await DialogService.Confirm($"Total Price for {ListedItem.ShipName} <br> <p class=\"PriceRed\">{(1 * ListedItem.Price):n0}SC </p>", "Confirmation", new ConfirmOptions() { OkButtonText = $"Buy", CancelButtonText = "Cancel" });
+        if (confirmed != null && confirmed.Value)
+        {
+            var buy = new BuyShipEvent();
+            buy.ShipListing = ListedItem;
+            buy.OriginatingPlayerSteamId = User.UserInfo.SteamId;
+           
+
+            var final = new Event();
+
+            final.EventType = EventType.BuyShip;
+            final.JsonEvent = JsonConvert.SerializeObject(buy);
+
+            eventService.AddEvent(User.UserInfo.SteamId, final);
+        }
+        return;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+}

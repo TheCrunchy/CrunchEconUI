@@ -27,10 +27,11 @@
         <ChildContent>
             <DataGridColumn TItem="ShipListing" Field="ImagePath" Caption="Icon" Filterable="false" Editable="false">
                 <DisplayTemplate>
+
                     <RadzenImage Path="@context.ImagePath" Style="max-width: 300px; max-height: 300px;" />
                 </DisplayTemplate>
             </DataGridColumn>
-            <DataGridColumn TItem="ShipListing" Field="ShipName" Caption="Ship Name" Editable="false"/>
+            <DataGridColumn TItem="ShipListing" Field="ShipName" Caption="Ship Name" Editable="false" />
             <DataGridColumn TItem="ShipListing" Field="Description" Caption="Description" Editable="false" />
 
             <DataGridColumn TItem="ShipListing" Field="Price" Caption="Price to Buy" Filterable="false" Editable="false">   </DataGridColumn>
@@ -53,7 +54,17 @@
                 </DeleteCommandTemplate>
                 <EditCommandTemplate>
                     <HasAccessComponent AccessLevel="0">
-                     <p>test</p>
+                        <RadzenStack>
+                            <BuyShipComponent ListedItem="@context.Item"></BuyShipComponent>
+                            @if (context.Item.RequireReputation)
+                            {
+                                <RadzenStack>
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">Rep Required: @context.Item.ReputationRequirement</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">@(string.Join("or", context.Item.FactionTag.Split(","))) </RadzenText>
+
+                                </RadzenStack>
+                            }
+                        </RadzenStack>
                     </HasAccessComponent>
                 </EditCommandTemplate>
             </DataGridCommandColumn>

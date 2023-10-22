@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace CrunchEconUI.Components
+namespace CrunchEconUI.Components.ShipSales
 {
     public partial class NewShipListingComponent
     {
@@ -23,16 +23,26 @@ namespace CrunchEconUI.Components
         [Inject]
         public IWebHostEnvironment Environment { get; set; }
 
-        public String SelectedFilePath;
-        public List<String> AdditionalImages = new List<String>();
+        public string SelectedFilePath;
+        public List<string> AdditionalImages = new List<string>();
 
         private ShipListing NewListing = new ShipListing();
 
+        [Inject]
+        private IListingService service { get; set; }
+
         public async Task Submit()
         {
+            NewListing.ImagePath = SelectedFilePath;
+            NewListing.ImageUrls = AdditionalImages;
+            NewListing.Id = Guid.NewGuid();
+            NewListing.RequireReputation = !string.IsNullOrWhiteSpace(NewListing.FactionTag);
 
+            await service.StoreShip(NewListing);
+            DialogService.Close();
         }
-            private async Task LoadFiles(InputFileChangeEventArgs e)
+
+        private async Task LoadFiles(InputFileChangeEventArgs e)
         {
             foreach (var file in e.GetMultipleFiles(1))
             {

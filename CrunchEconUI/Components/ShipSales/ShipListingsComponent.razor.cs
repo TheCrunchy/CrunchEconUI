@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using System;
 
-namespace CrunchEconUI.Components
+namespace CrunchEconUI.Components.ShipSales
 {
     public partial class ShipListingsComponent : IAsyncDisposable
     {
         [Inject]
         public EventService eventService { get; set; }
         [Inject]
-         DialogService DialogService { get; set; }
+        DialogService DialogService { get; set; }
         [Inject] IListingService listingService { get; set; }
         List<ShipListing> Items = new();
         public DataGrid<ShipListing> GridRef { get; set; }
@@ -34,7 +34,7 @@ namespace CrunchEconUI.Components
         public async Task Changed()
         {
             Items = await listingService.GetShipListings();
-            
+
             switch (Bound)
             {
                 case "Price Low to High":
@@ -49,7 +49,7 @@ namespace CrunchEconUI.Components
                 await GridRef?.Reload();
                 await GridRef?.Refresh();
             }
-      
+
             await InvokeAsync(StateHasChanged);
             return;
         }
@@ -72,10 +72,10 @@ namespace CrunchEconUI.Components
         {
             var ListedItem = new ItemListing();
             ListedItem.OwnerId = User.UserInfo.SteamId;
-          
-                await DialogService.OpenAsync<NewShipListingComponent>($"New Listing",
-                       new Dictionary<string, object>() { { "User", User } },
-                       new DialogOptions() { Width = "90%", Height = "90%", Resizable = true, Draggable = true });
+
+            await DialogService.OpenAsync<NewShipListingComponent>($"New Listing",
+                   new Dictionary<string, object>() { { "User", User } },
+                   new DialogOptions() { Width = "90%", Height = "90%", Resizable = true, Draggable = true });
         }
 
         public async ValueTask DisposeAsync()

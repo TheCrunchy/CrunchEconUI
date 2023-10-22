@@ -1,0 +1,9 @@
+﻿<div>
+    <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="Radzen.FlexWrap.Wrap">
+
+        @foreach (var item in ListedItem.ImageUrls)
+        {
+            <RadzenImage Path="@item" Style="max-width: 40%; max-height: 40%;" />
+        }
+    </RadzenStack>
+</div>
