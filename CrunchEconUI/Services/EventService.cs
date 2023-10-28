@@ -44,34 +44,38 @@ namespace CrunchEconUI.Services
             return events;
         }
 
-        public void AddEvent(ulong playerId, Event playerEvent)
+        public async Task AddEvent(ulong playerId, Event playerEvent)
         {
-            if (playersEvents.ContainsKey(playerId))
+            if (DBService.Context.ArchivedEvents.Any(x => x.Id == playerEvent.Id))
             {
-                var items = playersEvents[playerId];
-                items.Add(playerEvent);
-                playersEvents[playerId] = items;
+                var playersEvent = DBService.Context.ArchivedEvents.FirstOrDefault(x => x.Id == playerEvent.Id);
+                playersEvent.OriginatingPlayerId = (long)playerId;
+                playersEvent.Waiting = true;
+                playersEvent.Source = CrunchEconModels.Models.EventSource.Web;
             }
             else
             {
-                playersEvents.Add(playerId, new List<Event>() { playerEvent });
+                playerEvent.OriginatingPlayerId = (long)playerId;
+                playerEvent.Waiting = true;
+                playerEvent.Source = CrunchEconModels.Models.EventSource.Web;
+                DBService.Context.ArchivedEvents.Add(playerEvent);
+
             }
+          
+
+           await DBService.Context.SaveChangesAsync();
         }
 
-        public void RemoveEvent(ulong playerId, Guid eventId)
+        public async Task RemoveEvent(ulong playerId, Guid eventId)
         {
 
-            if (playersEvents.ContainsKey(playerId))
+            if (DBService.Context.ArchivedEvents.Any(x => x.Id == eventId))
             {
-                var events = playersEvents[playerId];
-                var removing = events.FirstOrDefault(x => x.Id == eventId);
-                if (removing != null)
-                {
-                    events.Remove(removing);
-                }
+                var playersEvent = DBService.Context.ArchivedEvents.FirstOrDefault(x => x.Id == eventId);
+                playersEvent.Processed = true;
+                playersEvent.Source = CrunchEconModels.Models.EventSource.Archived;
+                await DBService.Context.SaveChangesAsync();
             }
-
-
         }
 
         public void AddTexture(string definition, TextureEvent texture)

@@ -72,7 +72,7 @@ namespace CrunchEconUI.Components
             final.EventType = EventType.ListItem;
             final.JsonEvent = JsonConvert.SerializeObject(create);
 
-            eventService.AddEvent(User.UserInfo.SteamId, final);
+            await eventService.AddEvent(User.UserInfo.SteamId, final);
 
             DialogService.Close();
         }

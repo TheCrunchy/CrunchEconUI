@@ -34,15 +34,17 @@ internal class Program
         APIKEY = builder.Configuration["ApiKey"];
         builder.Services.AddTransient(x => new SteamWebInterfaceFactory(builder.Configuration["Authentication:Steam:ClientSecret"]));
         builder.Services.AddScoped<AuthenticationStateProvider, SteamAuthProvider>();
- 
+
         builder.Services.AddSingleton<PlayerBalanceAndNotifyService>();
         builder.Services.AddSingleton<ValidatedUserService>();
         builder.Services.AddSingleton<EventService>();
         builder.Services.AddSingleton<ProductionUpgradeService>();
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
-        DBString = builder.Configuration["DBString2"];
-     
+        DBString = builder.Configuration["DBString"];
+
+        DBService.Setup();
+
         builder.Logging.SetMinimumLevel(LogLevel.Information);
         builder.Services.AddScoped<AuthenticatedUserService>();
         builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)

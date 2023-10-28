@@ -89,7 +89,7 @@
             final.EventType = EventType.BuyShip;
             final.JsonEvent = JsonConvert.SerializeObject(buy);
 
-            eventService.AddEvent(User.UserInfo.SteamId, final);
+            await eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         return;
     }

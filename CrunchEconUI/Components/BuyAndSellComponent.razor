@@ -92,7 +92,7 @@
             ListedItem.BuyerId = buy.BuyerSteamId;
             await listingService.StoreItem(ListedItem);
 
-            eventService.AddEvent(User.UserInfo.SteamId, final);
+            await eventService.AddEvent(User.UserInfo.SteamId, final);
         }
         else
         {

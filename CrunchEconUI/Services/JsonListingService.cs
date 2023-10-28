@@ -15,8 +15,7 @@ namespace CrunchEconUI.Services
         public Action<ItemListing>? RefreshListings { get; set; }
         public Action<ShipListing>? RefreshShipListings { get; set; }
         private EventService events { get; set; }
-        private EconContext context { get; set; }
-
+ 
         private List<string> Prefabs { get; set; } = new();
 
         public List<String> GetPrefabs()
@@ -32,15 +31,13 @@ namespace CrunchEconUI.Services
         {
 
             this.events = events;
-            context = new EconContext(Program.DBString);
-            context.SaveChanges();
         }
 
         public async Task ModifySuspended(ItemListing item, bool suspended = true)
         {
-            if (context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id) != null)
+            if (DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id) != null)
             {
-                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id);
+                var listed = DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id);
                 listed.Suspended = suspended;
                 if (suspended)
                 {
@@ -49,27 +46,27 @@ namespace CrunchEconUI.Services
 
                 ListedItems[item.Id] = listed;
               
-                context.SaveChanges();
+                await DBService.Context.SaveChangesAsync();
                 RefreshListings?.Invoke(listed);
             }
         }
         public async Task DeleteListing(ItemListing item)
         {
-            if (context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id) != null)
+            if (DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id) != null)
             {
-                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id);
+                var listed = DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id);
                 listed.Deleted = true;
                 ListedItems.Remove(listed.Id);
-                context.playeritemlistings.Remove(listed);
-                context.SaveChanges();
+                DBService.Context.playeritemlistings.Remove(listed);
+                await DBService.Context.SaveChangesAsync();
                 RefreshListings?.Invoke(listed);
             }
         }
         public async Task<bool> IsSuspended(Guid itemId)
         {
-            if (context.playeritemlistings.FirstOrDefault(x => x.Id == itemId) != null)
+            if (DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == itemId) != null)
             {
-                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == itemId);
+                var listed = DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == itemId);
                 return ListedItems[itemId].Suspended;
             }
             return true;
@@ -77,16 +74,16 @@ namespace CrunchEconUI.Services
 
         public async Task<List<ShipListing>> GetShipListings()
         {
-            var data = context.shiplistings.Where(x => !x.Deleted).ToList();
+            var data = DBService.Context.shiplistings.Where(x => !x.Deleted).ToList();
             return data;
         }
 
             public async Task<List<ItemListing>> GetListings()
         {
-            if (context.playeritemlistings.Any())
+            if (DBService.Context.playeritemlistings.Any())
             {
                 var deleteThese = new List<ItemListing>();
-                foreach (var item in context.playeritemlistings.Where(x => x.SuspendedUntil.HasValue))
+                foreach (var item in DBService.Context.playeritemlistings.Where(x => x.SuspendedUntil.HasValue))
                 {
                     if (DateTime.Now >= item.SuspendedUntil)
                     {
@@ -98,7 +95,8 @@ namespace CrunchEconUI.Services
                 {
                     if (item.EventId.HasValue)
                     {
-                        events.RemoveEvent(0l, item.EventId.Value);
+                        var tevent = DBService.Context.ArchivedEvents.First(x => x.Id == item.EventId);
+                        DBService.Context.ArchivedEvents.Remove(tevent);
                     }
 
                     item.Suspended = false;
@@ -107,37 +105,38 @@ namespace CrunchEconUI.Services
                     await StoreItem(item);
                     await ModifySuspended(item, false);
                 }
-                return context.playeritemlistings.ToList();
+                await DBService.Context.SaveChangesAsync();
+                return DBService.Context.playeritemlistings.ToList();
             }
-
-            return context.playeritemlistings.ToList();
+            await DBService.Context.SaveChangesAsync();
+            return DBService.Context.playeritemlistings.ToList();
         }
 
         public async Task ArchiveEvent(Event ev)
         {
-            context.ArchivedEvents.Add(ev);
-            await context.SaveChangesAsync();
+            DBService.Context.ArchivedEvents.Add(ev);
+            await DBService.Context.SaveChangesAsync();
         }
 
         public async Task StoreShip(ShipListing listing)
         {
-            context.shiplistings.Add(listing);
-            context.SaveChanges();
+            DBService.Context.shiplistings.Add(listing);
+            await DBService.Context.SaveChangesAsync();
             RefreshShipListings?.Invoke(listing);
         }
 
         public async Task DeleteShip(ShipListing listing)
         {
             listing.Deleted = true;
-            context.SaveChanges();
+            await DBService.Context.SaveChangesAsync();
             RefreshShipListings?.Invoke(listing);
         }
 
         public async Task<ItemListing> GetUpdatedItem(Guid itemId)
         {
-            if (context.playeritemlistings.FirstOrDefault(x => x.Id == itemId) != null)
+            if (DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == itemId) != null)
             {
-                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == itemId);
+                var listed = DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == itemId);
                 return ListedItems[itemId];
             }
             return new ItemListing() { Suspended = true };
@@ -146,16 +145,16 @@ namespace CrunchEconUI.Services
         public async Task StoreItem(ItemListing listing)
         {
 
-            if (context.playeritemlistings.FirstOrDefault(x => x.Id == listing.Id) != null)
+            if (DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == listing.Id) != null)
             {
-                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == listing.Id);
+                var listed = DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == listing.Id);
                 ListedItems[listing.Id] = listing;
-                context.SaveChanges();
+                await DBService.Context.SaveChangesAsync();
                 return;
             }
 
-            context.playeritemlistings.Add(listing);
-            context.SaveChanges();
+            DBService.Context.playeritemlistings.Add(listing);
+            await DBService.Context.SaveChangesAsync();
             RefreshListings?.Invoke(listing);
         }
     }

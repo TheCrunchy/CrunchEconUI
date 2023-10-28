@@ -22,4 +22,11 @@ namespace CrunchEconModels.Models
         BuyShipResult,
         PrefabEvent,
     }
+
+    public enum EventSource
+    {
+        Web,
+        Torch,
+        Archived
+    }
 }

@@ -13,6 +13,10 @@ namespace CrunchEconModels.Models.Events
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public EventType EventType { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public EventSource Source { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string JsonEvent { get; set; }
         [Key]
@@ -20,5 +24,12 @@ namespace CrunchEconModels.Models.Events
         public Guid Id { get; set; } = Guid.NewGuid();
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public DateTime ExpiredAt { get; set; } = DateTime.Now.AddSeconds(30);
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Boolean Waiting { get; set; } = false;
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Boolean Processed { get; set; } = false;
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long OriginatingPlayerId { get; set; }
+
     }
 }
