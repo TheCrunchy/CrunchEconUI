@@ -27,8 +27,11 @@
         <ChildContent>
             <DataGridColumn TItem="ShipListing" Field="ImagePath" Caption="Icon" Filterable="false" Editable="false">
                 <DisplayTemplate>
-
-                    <RadzenImage Path="@context.ImagePath" Style="max-width: 300px; max-height: 300px;" />
+                    @if (context.ImagePath != null)
+                    {
+                        <RadzenImage Path = "@context.ImagePath" Style = "max-width: 300px; max-height: 300px;" />
+                    }
+                 
                 </DisplayTemplate>
             </DataGridColumn>
             <DataGridColumn TItem="ShipListing" Field="ShipName" Caption="Ship Name" Editable="false" />

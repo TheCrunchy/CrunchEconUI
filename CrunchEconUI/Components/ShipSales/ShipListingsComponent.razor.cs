@@ -71,7 +71,7 @@ namespace CrunchEconUI.Components.ShipSales
         public async Task CreateListing()
         {
             var ListedItem = new ItemListing();
-            ListedItem.OwnerId = User.UserInfo.SteamId;
+            ListedItem.OwnerSteam = (long)User.UserInfo.SteamId;
 
             await DialogService.OpenAsync<NewShipListingComponent>($"New Listing",
                    new Dictionary<string, object>() { { "User", User } },

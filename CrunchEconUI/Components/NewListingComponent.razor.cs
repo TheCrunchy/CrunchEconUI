@@ -34,7 +34,7 @@ namespace CrunchEconUI.Components
         protected override async Task OnInitializedAsync()
         {
             definitionIds = eventService.GetAllIds().OrderByDescending(x => x).ToList();
-            ListedItem.OwnerId = User.UserInfo.SteamId;
+            ListedItem.OwnerSteam = (long)User.UserInfo.SteamId;
             ListedItem.Suspended = true;
             ListedItem.SellPricePerItem = 1;
             ListedItem.BuyPricePerItem = 1;
@@ -68,7 +68,7 @@ namespace CrunchEconUI.Components
             var final = new Event();
             var create = new CreateListingEvent();
             create.Listing = ListedItem;
-            create.OriginatingPlayerSteamId = ListedItem.OwnerId;
+            create.OriginatingPlayerSteamId = (ulong)ListedItem.OwnerSteam;
             final.EventType = EventType.ListItem;
             final.JsonEvent = JsonConvert.SerializeObject(create);
 

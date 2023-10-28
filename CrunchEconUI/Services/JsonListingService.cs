@@ -2,8 +2,6 @@
 using CrunchEconModels.Models.Events;
 using CrunchEconUI.EntityFramework;
 using CrunchEconUI.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using SteamWebAPI2.Models;
 using System.Collections.Generic;
 using System.Reflection;
@@ -30,26 +28,19 @@ namespace CrunchEconUI.Services
             Prefabs = prefabs;
         }
 
-        public IListingService(EventService events, EconContext factory)
+        public IListingService(EventService events)
         {
 
             this.events = events;
-            context = factory;
-
-            context.Database.EnsureCreated();
-
+            context = new EconContext(Program.DBString);
             context.SaveChanges();
-
-            foreach (var item in context.playeritemlistings)
-            {
-                ListedItems.TryAdd(item.Id, item);
-            }
         }
 
         public async Task ModifySuspended(ItemListing item, bool suspended = true)
         {
-            if (ListedItems.TryGetValue(item.Id, out var listed))
+            if (context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id) != null)
             {
+                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id);
                 listed.Suspended = suspended;
                 if (suspended)
                 {
@@ -57,15 +48,16 @@ namespace CrunchEconUI.Services
                 }
 
                 ListedItems[item.Id] = listed;
-                context.playeritemlistings.Update(listed);
+              
                 context.SaveChanges();
                 RefreshListings?.Invoke(listed);
             }
         }
         public async Task DeleteListing(ItemListing item)
         {
-            if (ListedItems.TryGetValue(item.Id, out var listed))
+            if (context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id) != null)
             {
+                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == item.Id);
                 listed.Deleted = true;
                 ListedItems.Remove(listed.Id);
                 context.playeritemlistings.Remove(listed);
@@ -75,8 +67,9 @@ namespace CrunchEconUI.Services
         }
         public async Task<bool> IsSuspended(Guid itemId)
         {
-            if (ListedItems.ContainsKey(itemId))
+            if (context.playeritemlistings.FirstOrDefault(x => x.Id == itemId) != null)
             {
+                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == itemId);
                 return ListedItems[itemId].Suspended;
             }
             return true;
@@ -84,19 +77,20 @@ namespace CrunchEconUI.Services
 
         public async Task<List<ShipListing>> GetShipListings()
         {
-            return context.shiplistings.Where(x => !x.Deleted).ToList();
+            var data = context.shiplistings.Where(x => !x.Deleted).ToList();
+            return data;
         }
 
             public async Task<List<ItemListing>> GetListings()
         {
-            if (ListedItems.Any())
+            if (context.playeritemlistings.Any())
             {
                 var deleteThese = new List<ItemListing>();
-                foreach (var item in ListedItems.Where(x => x.Value.SuspendedUntil.HasValue))
+                foreach (var item in context.playeritemlistings.Where(x => x.SuspendedUntil.HasValue))
                 {
-                    if (DateTime.Now >= item.Value.SuspendedUntil)
+                    if (DateTime.Now >= item.SuspendedUntil)
                     {
-                        deleteThese.Add(item.Value);
+                        deleteThese.Add(item);
 
                     }
                 }
@@ -110,13 +104,13 @@ namespace CrunchEconUI.Services
                     item.Suspended = false;
                     item.EventId = null;
                     item.SuspendedUntil = null;
-                    StoreItem(item);
-                    ModifySuspended(item, false);
+                    await StoreItem(item);
+                    await ModifySuspended(item, false);
                 }
-                return ListedItems.ToList().Select(x => x.Value).ToList();
+                return context.playeritemlistings.ToList();
             }
 
-            return ListedItems.ToList().Select(x => x.Value).ToList();
+            return context.playeritemlistings.ToList();
         }
 
         public async Task ArchiveEvent(Event ev)
@@ -135,15 +129,15 @@ namespace CrunchEconUI.Services
         public async Task DeleteShip(ShipListing listing)
         {
             listing.Deleted = true;
-            context.shiplistings.Update(listing);
             context.SaveChanges();
             RefreshShipListings?.Invoke(listing);
         }
 
         public async Task<ItemListing> GetUpdatedItem(Guid itemId)
         {
-            if (ListedItems.ContainsKey(itemId))
+            if (context.playeritemlistings.FirstOrDefault(x => x.Id == itemId) != null)
             {
+                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == itemId);
                 return ListedItems[itemId];
             }
             return new ItemListing() { Suspended = true };
@@ -152,14 +146,13 @@ namespace CrunchEconUI.Services
         public async Task StoreItem(ItemListing listing)
         {
 
-            if (ListedItems.ContainsKey(listing.Id))
+            if (context.playeritemlistings.FirstOrDefault(x => x.Id == listing.Id) != null)
             {
+                var listed = context.playeritemlistings.FirstOrDefault(x => x.Id == listing.Id);
                 ListedItems[listing.Id] = listing;
-                context.playeritemlistings.Update(listing);
+                context.SaveChanges();
                 return;
             }
-
-            ListedItems.Add(listing.Id, listing);
 
             context.playeritemlistings.Add(listing);
             context.SaveChanges();

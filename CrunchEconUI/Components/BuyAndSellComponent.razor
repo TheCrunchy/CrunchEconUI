@@ -19,10 +19,10 @@
 
             <RadzenButton Text="Sell" ButtonStyle="ButtonStyle.Primary" Click=@ClickSell Disabled=@(!ListedItem.IsBuying || ListedItem.MaxAmountToBuy <= 0) />
 
-            <RadzenButton Text="Withdraw" ButtonStyle="ButtonStyle.Success" Icon="account_balance_wallet" Click="@ClickWithdraw" Disabled=@(ListedItem.OwnerId != User.UserInfo?.SteamId)></RadzenButton>
-            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete" Disabled=@(ListedItem.OwnerId != User.UserInfo?.SteamId)></RadzenButton>
+            <RadzenButton Text="Withdraw" ButtonStyle="ButtonStyle.Success" Icon="account_balance_wallet" Click="@ClickWithdraw" Disabled=@((ulong)ListedItem.OwnerSteam != User.UserInfo?.SteamId)></RadzenButton>
+            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete" Disabled=@((ulong)ListedItem.OwnerSteam != User.UserInfo?.SteamId)></RadzenButton>
             <HasAccessComponent AccessLevel="5">
-                <RadzenButton Text="Admin Delete" ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDelete"></RadzenButton>
+                <RadzenButton Text="Admin Delete" ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@ClickDeleteAdmin"></RadzenButton>
             </HasAccessComponent>
         </RadzenStack>
     </div>
@@ -73,7 +73,7 @@
         {
             var buy = new BuyItemEvent();
             buy.ListedItemId = ListedItem.Id;
-            buy.SellerSteamId = ListedItem.OwnerId;
+            buy.SellerSteamId = (ulong)ListedItem.OwnerSteam;
             buy.Price = 0;
             buy.Amount = Amount;
             buy.BuyerSteamId = User.UserInfo.SteamId;
@@ -100,7 +100,12 @@
 
         }
     }
-
+    public async Task ClickDeleteAdmin()
+    {
+        ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
+        await listingService.ModifySuspended(ListedItem, true);
+        await listingService.DeleteListing(ListedItem);
+    }
     public async Task ClickDelete()
     {
         ListedItem = await listingService.GetUpdatedItem(ListedItem.Id);
@@ -126,7 +131,7 @@
             var final = new Event();
             var del = new DeleteListingEvent();
             del.Listing = ListedItem;
-            del.OriginatingPlayerSteamId = ListedItem.OwnerId;
+            del.OriginatingPlayerSteamId = (ulong)ListedItem.OwnerSteam;
             final.EventType = EventType.DeleteListing;
             final.JsonEvent = JsonConvert.SerializeObject(del);
 
@@ -165,7 +170,7 @@
         {
             var buy = new BuyItemEvent();
             buy.ListedItemId = ListedItem.Id;
-            buy.SellerSteamId = ListedItem.OwnerId;
+            buy.SellerSteamId = (ulong)ListedItem.OwnerSteam;
             buy.Price = Amount * ListedItem.SellPricePerItem;
             buy.Amount = Amount;
             buy.BuyerSteamId = User.UserInfo.SteamId;
@@ -222,7 +227,7 @@
         {
             var buy = new BuyItemEvent();
             buy.ListedItemId = ListedItem.Id;
-            buy.SellerSteamId = ListedItem.OwnerId;
+            buy.SellerSteamId = (ulong)ListedItem.OwnerSteam;
             buy.Price = Amount * ListedItem.BuyPricePerItem;
             buy.Amount = Amount;
             buy.BuyerSteamId = User.UserInfo.SteamId;

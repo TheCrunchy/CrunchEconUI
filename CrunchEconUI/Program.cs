@@ -16,7 +16,6 @@ using System.Reflection;
 using AutoMapper.Features;
 using Newtonsoft.Json;
 using CrunchEconUI.EntityFramework;
-using Microsoft.EntityFrameworkCore;
 
 internal class Program
 {
@@ -43,9 +42,7 @@ internal class Program
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
         DBString = builder.Configuration["DBString2"];
-        builder.Services.AddDbContext<EconContext>();
-        builder.Services.AddTransient<EconContext>();
-
+     
         builder.Logging.SetMinimumLevel(LogLevel.Information);
         builder.Services.AddScoped<AuthenticatedUserService>();
         builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)

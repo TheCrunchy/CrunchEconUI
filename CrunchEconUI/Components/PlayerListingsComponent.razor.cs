@@ -62,7 +62,7 @@ namespace CrunchEconUI.Components
                 case "My Listings":
                     if (User != null && User.UserInfo != null)
                     {
-                        Items = Items.Where(x => x.OwnerId == User.UserInfo.SteamId).ToList();
+                        Items = Items.Where(x => (ulong)x.OwnerSteam == User.UserInfo.SteamId).ToList();
                     }
                     break;
             }
@@ -101,7 +101,7 @@ namespace CrunchEconUI.Components
         public async Task CreateListing()
         {
             var ListedItem = new ItemListing();
-            ListedItem.OwnerId = User.UserInfo.SteamId;
+            ListedItem.OwnerSteam = (long)User.UserInfo.SteamId;
           
                 await DialogService.OpenAsync<NewListingComponent>($"New Listing",
                        new Dictionary<string, object>() { { "User", User } },

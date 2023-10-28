@@ -14,7 +14,7 @@
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="Radzen.FlexWrap.Wrap">
 
             <RadzenButton Text="Buy" ButtonStyle="ButtonStyle.Secondary" Click=@ClickBuy/>
-            @if (ListedItem.ImageUrls.Any())
+            @if (ListedItem.ImageUrls != null && ListedItem.ImageUrls.Any())
             {
                 <RadzenButton Text="Images" ButtonStyle="ButtonStyle.Secondary" Click=@ClickImages />
             }
