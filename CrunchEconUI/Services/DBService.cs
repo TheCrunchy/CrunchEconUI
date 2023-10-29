@@ -1,4 +1,5 @@
-﻿using CrunchEconUI.EntityFramework;
+﻿using CrunchEconModels;
+using CrunchEconModels.Models.EntityFramework;
 
 namespace CrunchEconUI.Services
 {

@@ -5,12 +5,14 @@ VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrunchEconUI", "CrunchEconUI\CrunchEconUI.csproj", "{2E651FFE-69D8-410D-8554-AAFF7BA94843}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrunchEconModels", "CrunchEconModels\CrunchEconModels.csproj", "{BF7DC01C-7654-4D3F-B13A-199EA36FEE00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrunchEconModels", "CrunchEconModels\CrunchEconModels.csproj", "{BF7DC01C-7654-4D3F-B13A-199EA36FEE00}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{27F96467-2CBA-4DD8-BFA3-C0ED4D65092A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrunchEconEventResultRelay", "CrunchEconEventResultRelay\CrunchEconEventResultRelay.csproj", "{9E7F7667-EDAB-4EB8-87ED-E209A2F6CD0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{BF7DC01C-7654-4D3F-B13A-199EA36FEE00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF7DC01C-7654-4D3F-B13A-199EA36FEE00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF7DC01C-7654-4D3F-B13A-199EA36FEE00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E7F7667-EDAB-4EB8-87ED-E209A2F6CD0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E7F7667-EDAB-4EB8-87ED-E209A2F6CD0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E7F7667-EDAB-4EB8-87ED-E209A2F6CD0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E7F7667-EDAB-4EB8-87ED-E209A2F6CD0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

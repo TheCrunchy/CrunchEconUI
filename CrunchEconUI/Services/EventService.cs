@@ -74,10 +74,11 @@ namespace CrunchEconUI.Services
                 var playersEvent = DBService.Context.ArchivedEvents.FirstOrDefault(x => x.Id == eventId);
                 playersEvent.Processed = true;
                 playersEvent.Source = CrunchEconModels.Models.EventSource.Archived;
+                playersEvent.Waiting = false;
                 await DBService.Context.SaveChangesAsync();
             }
         }
-
+      
         public void AddTexture(string definition, TextureEvent texture)
         {
             Textures.Remove(definition);

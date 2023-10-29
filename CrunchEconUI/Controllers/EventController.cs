@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 using CrunchEconUI.Services;
 using CrunchEconModels.Models.Events;
+using System.Threading;
 
 namespace CrunchEconUI.Controllers
 {
@@ -18,10 +19,13 @@ namespace CrunchEconUI.Controllers
     [Route("api/[controller]/[action]")]
     public class EventController : ControllerBase
     {
+ 
         private EventService eventService { get; set; }
         private IListingService listingService { get; set; }
         private ILogger<EventController> logger { get; set; }
         private PlayerBalanceAndNotifyService balanceService { get; set; }
+
+        private System.Timers.Timer aTimer = new System.Timers.Timer();
         public EventController(EventService events, PlayerBalanceAndNotifyService balances, IListingService listservice, ILogger<EventController> logger)
         {
             this.eventService = events;
@@ -98,26 +102,27 @@ namespace CrunchEconUI.Controllers
                         var result = JsonConvert.DeserializeObject<BuyShipEvent>(eventMessage.JsonEvent);
                         if (result.Result == EventResult.Success)
                         {
-                           
-                            await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+
+                   
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully bought {result.ShipListing.ShipName}");
                         }
                         else
                         {
-                           await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                      
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to buy {result.ShipListing.ShipName}, reason <p class=\"PriceRed\">{result.Result}</p>");
                         }
-                        await listingService.ArchiveEvent(eventMessage);
+                        await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                        //  await listingService.ArchiveEvent(eventMessage);
                         break;
                     }
 
                 case EventType.ListItemResult:
                     {
-   
+
                         var result = JsonConvert.DeserializeObject<CreateListingEvent>(eventMessage.JsonEvent);
                         if (result.Result == EventResult.Success)
                         {
-                            await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+            
                             await listingService.StoreItem(result.Listing);
                             await listingService.ModifySuspended(result.Listing, false);
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully created listing for {result.Listing.ItemId.Replace("MyObjectBuilder_", "")}");
@@ -130,7 +135,8 @@ namespace CrunchEconUI.Controllers
                             item.Deleted = false;
                             await listingService.ModifySuspended(item, false);
                         }
-                        await listingService.ArchiveEvent(eventMessage);
+                        await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                        //   await listingService.ArchiveEvent(eventMessage);
                         break;
                     }
                 case EventType.DeleteListing:
@@ -138,7 +144,7 @@ namespace CrunchEconUI.Controllers
                         var result = JsonConvert.DeserializeObject<DeleteListingEvent>(eventMessage.JsonEvent);
                         if (result.Result == EventResult.Success)
                         {
-                            await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                     
                             await listingService.DeleteListing(result.Listing);
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully deleted {result.Listing.Amount} of {result.Listing.ItemId.Replace("MyObjectBuilder_", "")}");
                         }
@@ -150,7 +156,8 @@ namespace CrunchEconUI.Controllers
                             item.Deleted = false;
                             await listingService.ModifySuspended(item, false);
                         }
-                        await listingService.ArchiveEvent(eventMessage);
+                        await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                        //   await listingService.ArchiveEvent(eventMessage);
                         break;
                     }
                 case EventType.TextureEvent:
@@ -191,18 +198,18 @@ namespace CrunchEconUI.Controllers
                                     await listingService.DeleteListing(item);
                                 }
                             }
-                            await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+               
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully bought {result.Amount} of {result.DefinitionIdString.Replace("MyObjectBuilder_", "")}");
                             await listingService.ModifySuspended(item, false);
                         }
                         else
                         {
-                            await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to buy {result.Amount} of {result.DefinitionIdString.Replace("MyObjectBuilder_", "")}, reason <p class=\"PriceRed\">{result.Result}</p>");
                             var item = await listingService.GetUpdatedItem(result.ListedItemId);
                             await listingService.ModifySuspended(item, false);
                         }
-                        await listingService.ArchiveEvent(eventMessage);
+                        await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                        //  await listingService.ArchiveEvent(eventMessage);
                         break;
                     }
 
@@ -215,18 +222,18 @@ namespace CrunchEconUI.Controllers
                             item.Amount += result.Amount;
                             item.MaxAmountToBuy -= result.Amount;
                             await listingService.StoreItem(item);
-                           await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                    
                             await listingService.ModifySuspended(item, false);
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Successfully sold {result.Amount} of {result.DefinitionIdString.Replace("MyObjectBuilder_", "")}");
                         }
                         else
                         {
-                           await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
                             balanceService.SendNotification(result.OriginatingPlayerSteamId, $"Failed to sell {result.Amount} of {result.DefinitionIdString.Replace("MyObjectBuilder_", "")}, reason <p class=\"PriceRed\">{result.Result}<p>");
                             var item = await listingService.GetUpdatedItem(result.ListedItemId);
                             await listingService.ModifySuspended(item, false);
                         }
-                        await listingService.ArchiveEvent(eventMessage);
+                        await eventService.RemoveEvent(result.OriginatingPlayerSteamId, eventMessage.Id);
+                        //    await listingService.ArchiveEvent(eventMessage);
                         break;
                     }
                 default:

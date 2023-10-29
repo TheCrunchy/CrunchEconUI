@@ -15,7 +15,6 @@ using Serilog;
 using System.Reflection;
 using AutoMapper.Features;
 using Newtonsoft.Json;
-using CrunchEconUI.EntityFramework;
 
 internal class Program
 {

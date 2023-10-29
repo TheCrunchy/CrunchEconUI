@@ -1,6 +1,5 @@
 ﻿using CrunchEconModels.Models;
 using CrunchEconModels.Models.Events;
-using CrunchEconUI.EntityFramework;
 using CrunchEconUI.Models;
 using SteamWebAPI2.Models;
 using System.Collections.Generic;
@@ -44,8 +43,6 @@ namespace CrunchEconUI.Services
                     listed.SuspendedUntil = DateTime.Now.AddMinutes(0.1);
                 }
 
-                ListedItems[item.Id] = listed;
-              
                 await DBService.Context.SaveChangesAsync();
                 RefreshListings?.Invoke(listed);
             }
@@ -67,7 +64,7 @@ namespace CrunchEconUI.Services
             if (DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == itemId) != null)
             {
                 var listed = DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == itemId);
-                return ListedItems[itemId].Suspended;
+                return listed.Suspended;
             }
             return true;
         }
@@ -112,12 +109,6 @@ namespace CrunchEconUI.Services
             return DBService.Context.playeritemlistings.ToList();
         }
 
-        public async Task ArchiveEvent(Event ev)
-        {
-            DBService.Context.ArchivedEvents.Add(ev);
-            await DBService.Context.SaveChangesAsync();
-        }
-
         public async Task StoreShip(ShipListing listing)
         {
             DBService.Context.shiplistings.Add(listing);
@@ -137,7 +128,7 @@ namespace CrunchEconUI.Services
             if (DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == itemId) != null)
             {
                 var listed = DBService.Context.playeritemlistings.FirstOrDefault(x => x.Id == itemId);
-                return ListedItems[itemId];
+                return listed;
             }
             return new ItemListing() { Suspended = true };
         }

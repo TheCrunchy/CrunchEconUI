@@ -2,7 +2,7 @@
 using CrunchEconModels.Models.Events;
 using System;
 using System.Data.Entity;
-namespace CrunchEconUI.EntityFramework
+namespace CrunchEconModels.Models.EntityFramework
 {
     public class EconContext : DbContext
     {
@@ -26,13 +26,13 @@ namespace CrunchEconUI.EntityFramework
             var exists = Database.Exists();
             Database.CreateIfNotExists();
             Database.Connection.Open();
-          //  Database.CreateIfNotExists();
-  
+            //  Database.CreateIfNotExists();
+
         }
 
         public DbSet<ItemListing> playeritemlistings { get; set; }
         public DbSet<ShipListing> shiplistings { get; set; }
         public DbSet<Event> ArchivedEvents { get; set; }
-        
+
     }
 }
